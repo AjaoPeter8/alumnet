@@ -1,0 +1,60 @@
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
+        href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800" />
+
+    <title>AlumNet</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <style>
+        html {
+            overflow: hidden;
+        }
+
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+            height: 100%;
+        }
+
+        .blinking-text {
+            animation: blink 1s infinite;
+            /* 'blink' is the name of the animation, 1s is the duration, 'infinite' makes it loop */
+            color: black;
+            font-size: 80px;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            /* At the start, fully visible */
+            50% {
+                opacity: 0;
+            }
+
+            /* At 50% of the animation, completely transparent */
+            100% {
+                opacity: 1;
+            }
+
+            /* At the end, fully visible again */
+        }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+
+<body>
+    <%- include ("partials/header.ejs") %>
+        <div>
+            <h2 class="blinking-text">Coming Soon...</h2>
+        </div>
+</body>
+
+</html>

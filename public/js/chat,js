@@ -1,0 +1,24 @@
+(async function () {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('No token found. Please login.');
+    return window.location.href = '/';
+  }
+
+  const res = await fetch('/chat', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!res.ok) {
+    alert('Failed to load chat.');
+    return;
+  }
+
+  const html = await res.text();
+  document.open();
+  document.write(html);
+  document.close();
+})();

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlumNet</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .blinking-text {
+      animation: blink 1s infinite;
+      color: black;
+      font-size: 3rem;
+      text-align: center;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+  <%- include("partials/header.ejs") %>
+
+  <div class="flex-grow flex justify-center items-center">
+    <h2 class="blinking-text">Welcome <%= user.username %> — AlumNet Coming Soon...</h2>
+  </div>
+</body>
+</html>
