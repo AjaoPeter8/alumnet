@@ -6,51 +6,161 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AlumNet - Chat</title>
   <link rel="stylesheet" href="/css/output.css" />
-  <script src="http://localhost:5000/socket.io/socket.io.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/chat.css" />
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 </head>
 
-<body class="h-screen bg-gray-100 font-sans">
+<body class="min-h-screen">
   <%- include("partials/header.ejs") %>
 
-    <div class="flex h-full">
+    <div class="chat-container h-[calc(100vh-80px)] flex overflow-hidden">
       <!-- Contact List -->
-      <div class="w-1/4 bg-white border-r overflow-y-auto p-4">
-        <h2 class="text-2xl font-semibold mb-4">Chats</h2>
+      <aside id="sidebar"
+        class="sidebar w-full md:w-[25%] overflow-y-auto p-6 md:static fixed top-0 left-0 h-full z-30 transition-transform duration-300 md:translate-x-0 -translate-x-0 md:relative block md:block">
+        <!-- Header -->
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-4 mt-4">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+              <i class="fas fa-comments text-white text-lg"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900">Messages</h2>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="relative">
+            <input type="text" placeholder="Search conversations..."
+              class="search-input w-full px-4 py-3 text-sm focus:outline-none">
+          </div>
+        </div>
+
+        <!-- Contact List -->
         <ul id="contactList" class="space-y-2">
           <% users.forEach(u=> { %>
-            <li class="p-2 rounded hover:bg-gray-100 cursor-pointer" data-user-id="<%= u.user_id %>"
+            <li class="contact-item p-4 cursor-pointer flex items-center gap-4" data-user-id="<%= u.user_id %>"
               data-user="<%= u.username %>">
-              <div class="font-medium text-gray-800">
-                <%= u.username %>
+              <div class="relative flex-shrink-0">
+                <img src="/assets/images/<%= u.avatar || 'default.png' %>" alt="avatar"
+                  class="w-12 h-12 rounded-full object-cover"
+                  onerror="this.onerror=null;this.src='/assets/images/default.png';">
+                <!-- <div class="online-indicator"></div> -->
               </div>
-              <div class="text-sm text-gray-500">
-                <%= u.job_title || 'No title' %>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-semibold text-gray-900 truncate">
+                    <%= u.username %>
+                  </h3>
+                  <span class="text-xs text-gray-500">2m</span>
+                </div>
+                <p class="text-sm text-gray-600 truncate">
+                  <%= u.job_title || 'Available' %>
+                </p>
+                <div class="flex items-center mt-1">
+                  <div class="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                  <span class="text-xs text-gray-500">Last message preview...</span>
+                </div>
               </div>
             </li>
             <% }) %>
         </ul>
-      </div>
-
+      </aside>
       <!-- Chat Panel -->
-      <div class="w-3/4 flex flex-col">
-        <div class="bg-white px-6 py-4 shadow border-b">
-          <h2 id="chatHeader" class="text-xl font-bold text-gray-800">Select a contact to start chatting</h2>
+      <main id="chatPanel" class="flex flex-col w-full md:w-[75%] min-h-0 hidden md:flex">
+        <!-- Chat Header -->
+        <div class="chat-header px-6 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <button id="backButton" class="md:hidden p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="flex items-center gap-3">
+              <div id="chatAvatar"
+                class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white font-semibold"
+                style="display: none;">
+                <i class="fas fa-user"></i>
+              </div>
+              <div>
+                <h2 id="chatHeader" class="text-lg font-semibold">Select a contact to start chatting</h2>
+                <div id="chatStatus" class="text-sm text-white/80" style="display: none;">
+                  <i class="fas fa-circle text-green-400 text-xs mr-1"></i>
+                  Online
+                  <span id="typing-indicator" class="ml-2"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="flex items-center gap-2">
+          <button class="p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
+            <i class="fas fa-phone"></i>
+          </button>
+          <button class="p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
+            <i class="fas fa-video"></i>
+          </button>
+          <button class="p-2 text-white hover:bg-white/20 rounded-lg transition-colors">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div> -->
         </div>
-        <div class="relative">
-          <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-2 bg-gray-50"></div>
+
+        <!-- Chat Content -->
+        <div class="flex flex-col flex-1 min-h-0">
+          <!-- Welcome Screen -->
+          <div id="chatPlaceholder" class="flex-1 flex items-center justify-center p-8" style="display: flex;">
+            <div class="welcome-card p-8 text-center max-w-md">
+              <div
+                class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-comments text-white text-2xl"></i>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-3">Welcome to AlumNet Chat</h3>
+              <p class="text-gray-600 mb-6">Connect with fellow alumni and build meaningful professional relationships.
+                Select a contact to start your conversation.</p>
+              <div class="flex justify-center gap-6 text-sm text-gray-500 p-4 gap-2">
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-shield-alt text-green-500"></i>
+                  <span>Secure</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-bolt text-yellow-500"></i>
+                  <span>Real-time</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <i class="fas fa-users text-blue-500"></i>
+                  <span>Professional</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Container -->
+          <div id="chatBox" class="flex-1 overflow-y-auto p-6 space-y-4"
+            style="display: none; background: linear-gradient(to bottom, #f8fafc, #e2e8f0);"></div>
 
           <!-- Message Input -->
-
-          <div id="message-input-container" class="hidden border-t bg-white p-4 flex items-center gap-2 sticky bottom-0">
-            <input id="messageInput" type="text" placeholder="Type a message..."
-              class="flex-1 p-2 border rounded focus:outline-none focus:ring focus:border-blue-300" />
-            <input id="fileInput" type="file" accept="image/*,.pdf" class="p-2 border rounded" />
-            <button id="sendButton" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Send</button>
+          <div id="message-input-container" class="input-container relative" style="display: flex;">
+            <div class="flex items-center gap-4 w-full sticky bottom-0 z-10">
+              <button onclick="document.getElementById('fileInput').click()"
+                class="p-3 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors">
+                <i class="fas fa-paperclip text-lg"></i>
+              </button>
+              <div class="flex-1">
+                <input id="messageInput" type="text" placeholder="Type your message..."
+                  class="message-input w-full px-6 py-4 text-base focus:outline-none" />
+                <!-- <button class="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-indigo-600 transition-colors">
+                <i class="fas fa-smile text-lg"></i>
+              </button> -->
+              </div>
+              <input id="fileInput" type="file" accept="image/*,.pdf" class="hidden" />
+              <button id="sendButton" class="send-button text-white hover:scale-105 transition-transform">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <script>
       const token = localStorage.getItem('token');
       if (!token) {
@@ -64,7 +174,44 @@
       let currentRecipient = null;
       let typingTimeout = null;
 
-      const socket = io('http://localhost:5000', {
+      let mobileChatOpen = false;
+      const sidebar = document.getElementById('sidebar');
+      const chatPanel = document.getElementById('chatPanel');
+      const backButton = document.getElementById('backButton');
+      function showChatPanelMobile() {
+        sidebar.classList.add('hidden');
+        chatPanel.classList.remove('hidden');
+        backButton.classList.remove('hidden');
+        mobileChatOpen = true;
+      }
+      function showSidebarMobile() {
+        sidebar.classList.remove('hidden');
+        chatPanel.classList.add('hidden');
+        backButton.classList.add('hidden');
+        mobileChatOpen = false;
+      }
+      // Responsive toggle
+      function handleResize() {
+        if (window.innerWidth >= 768) {
+          sidebar.classList.remove('hidden');
+          chatPanel.classList.remove('hidden');
+          backButton.classList.add('hidden');
+        } else {
+          if (mobileChatOpen) {
+            sidebar.classList.add('hidden');
+            chatPanel.classList.remove('hidden');
+            backButton.classList.remove('hidden');
+          } else {
+            sidebar.classList.remove('hidden');
+            chatPanel.classList.add('hidden');
+            backButton.classList.add('hidden');
+          }
+        }
+      }
+      window.addEventListener('resize', handleResize);
+      handleResize();
+
+      const socket = io('http://localhost:3000', {
         path: '/socket.io',
         auth: { token }
       });
@@ -82,12 +229,49 @@
         }
       });
 
+      // Track if a contact is selected
+      let contactSelected = false;
+
+      function showChatPanelDesktop() {
+        document.getElementById('chatPlaceholder').style.display = 'none';
+        document.getElementById('chatBox').style.display = 'block';
+        contactSelected = true;
+      }
+      function showPlaceholderDesktop() {
+        document.getElementById('chatPlaceholder').style.display = 'flex';
+        document.getElementById('chatBox').style.display = 'none';
+        contactSelected = false;
+      }
+
+      // On page load, always show placeholder on desktop
+      function initializeDesktopPanel() {
+        if (window.innerWidth >= 768) {
+          showPlaceholderDesktop();
+          document.getElementById('chatPanel').classList.remove('hidden');
+        }
+      }
+      initializeDesktopPanel();
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768 && !contactSelected) {
+          showPlaceholderDesktop();
+        }
+      });
+
       document.querySelectorAll('#contactList li').forEach(li => {
         li.addEventListener('click', () => {
+          if (window.innerWidth < 768) {
+            showChatPanelMobile();
+          }
+          // Always hide placeholder and show chat area when a contact is clicked
+          document.getElementById('chatPlaceholder').style.display = 'none';
+          document.getElementById('chatBox').style.display = 'block';
           currentRecipientId = li.dataset.userId;
           currentRecipient = li.dataset.user;
-          document.getElementById('chatHeader').innerHTML = `Chatting with <span class="font-semibold">${currentRecipient}</span> <span id="typing-indicator" class="text-sm text-gray-500 ml-2"></span>`;
-          document.getElementById('message-input-container').classList.remove('hidden');
+          // Update chat header with new design
+          document.getElementById('chatHeader').textContent = `Chatting with ${currentRecipient}`;
+          document.getElementById('chatStatus').style.display = 'block';
+          document.getElementById('chatAvatar').style.display = 'flex';
+          document.getElementById('chatAvatar').textContent = currentRecipient.charAt(0).toUpperCase();
           fetchMessages();
         });
       });
@@ -113,48 +297,90 @@
         const isSender = msg.sender_id?.trim().toLowerCase() === currentUserId.trim().toLowerCase();
 
         const wrapper = document.createElement('div');
-        wrapper.className = `flex my-2 ${isSender ? 'justify-end' : 'justify-start'}`;
+        wrapper.className = `flex items-end gap-3 ${isSender ? 'justify-end' : 'justify-start'} mb-4`;
+
+        // Avatar for received messages
+        if (!isSender) {
+          const avatar = document.createElement('div');
+          avatar.className = 'w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0';
+          avatar.textContent = msg.sender.charAt(0).toUpperCase();
+          wrapper.appendChild(avatar);
+        }
+
+        const messageContainer = document.createElement('div');
+        messageContainer.className = `flex flex-col ${isSender ? 'items-end' : 'items-start'} max-w-xs sm:max-w-md`;
 
         const bubble = document.createElement('div');
-        bubble.className = `max-w-[70%] p-3 rounded-lg shadow text-sm break-words whitespace-pre-wrap ${isSender ? 'bg-blue-100 text-right rounded-br-none' : 'bg-gray-200 text-gray-900 rounded-bl-none'
-          }`;
+        bubble.className = `message-bubble ${isSender ? 'message-sent' : 'message-received'} px-4 py-3 max-w-full break-words`;
 
-        const header = document.createElement('div');
-        header.className = 'text-xs font-semibold mb-1';
-        header.textContent = msg.sender;
-        bubble.appendChild(header);
+        // Sender name for received messages
+        if (!isSender) {
+          const senderName = document.createElement('div');
+          senderName.className = 'text-xs font-semibold text-gray-600 mb-1';
+          senderName.textContent = msg.sender;
+          bubble.appendChild(senderName);
+        }
 
         if (msg.content) {
           const text = document.createElement('div');
+          text.className = 'text-sm leading-relaxed';
           text.textContent = msg.content;
           bubble.appendChild(text);
         }
 
         if (msg.file_url) {
+          const fileContainer = document.createElement('div');
+          fileContainer.className = `mt-2 p-3 rounded-lg ${isSender ? 'bg-white/20' : 'bg-gray-50'} border border-gray-200`;
+
           const fileLink = document.createElement('a');
           fileLink.href = msg.file_url;
-          fileLink.textContent = `📎 ${msg.file_name}`;
           fileLink.target = '_blank';
-          fileLink.className = 'block mt-2 underline text-blue-600';
-          bubble.appendChild(fileLink);
+          fileLink.className = `flex items-center gap-2 ${isSender ? 'text-white hover:text-white/80' : 'text-indigo-600 hover:text-indigo-800'} transition-colors`;
+
+          const fileIcon = document.createElement('i');
+          fileIcon.className = 'fas fa-paperclip';
+
+          const fileName = document.createElement('span');
+          fileName.textContent = msg.file_name;
+          fileName.className = 'text-sm font-medium truncate';
+
+          fileLink.appendChild(fileIcon);
+          fileLink.appendChild(fileName);
+          fileContainer.appendChild(fileLink);
+          bubble.appendChild(fileContainer);
         }
 
-        // Timestamp
-        const timestamp = document.createElement('div');
+        messageContainer.appendChild(bubble);
+
+        // Timestamp and status
+        const metaInfo = document.createElement('div');
+        metaInfo.className = `flex items-center gap-2 mt-1 px-2 ${isSender ? 'justify-end' : 'justify-start'}`;
+
+        const timestamp = document.createElement('span');
         const time = new Date(msg.timestamp);
-        timestamp.textContent = time.toLocaleString();
-        timestamp.className = 'text-[10px] text-gray-500 mt-1';
-        bubble.appendChild(timestamp);
+        timestamp.textContent = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        timestamp.className = 'text-xs text-gray-500';
+        metaInfo.appendChild(timestamp);
 
-        // Read status (for sender only)
+        // Read status for sent messages
         if (isSender) {
-          const status = document.createElement('div');
-          status.textContent = msg.read_status ? '✓ Read' : '✓ Sent';
-          status.className = 'text-[10px] text-blue-500 mt-0.5';
-          bubble.appendChild(status);
+          const status = document.createElement('span');
+          status.innerHTML = msg.read_status ? '<i class="fas fa-check-double text-indigo-500"></i>' : '<i class="fas fa-check text-gray-400"></i>';
+          status.className = 'text-xs';
+          metaInfo.appendChild(status);
         }
 
-        wrapper.appendChild(bubble);
+        messageContainer.appendChild(metaInfo);
+        wrapper.appendChild(messageContainer);
+
+        // Avatar for sent messages
+        if (isSender) {
+          const avatar = document.createElement('div');
+          avatar.className = 'w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs font-semibold flex-shrink-0';
+          avatar.textContent = currentUser.charAt(0).toUpperCase();
+          wrapper.appendChild(avatar);
+        }
+
         chatBox.appendChild(wrapper);
         chatBox.scrollTop = chatBox.scrollHeight;
       }
@@ -194,16 +420,17 @@
         }
       });
 
-      // Typing indicator handler
+      // Enhanced typing indicator handler
       socket.on('typing', (fromUserId) => {
         if (fromUserId === currentRecipientId) {
           const indicator = document.getElementById('typing-indicator');
           if (indicator) {
-            indicator.textContent = 'typing...';
+            indicator.innerHTML = '<span class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span> typing...';
+            indicator.className = 'text-sm text-white/80 ml-2';
             clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
-              indicator.textContent = '';
-            }, 2000);
+              indicator.innerHTML = '';
+            }, 3000);
           }
         }
       });
@@ -214,8 +441,25 @@
       });
 
       // Listen for new messages
-      socket.on('privateMessage', () => {
-        if (currentRecipientId) fetchMessages();
+      socket.on('privateMessage', (data) => {
+        if (currentRecipientId && (data.sender_id === currentRecipientId || data.receiver_id === currentRecipientId)) {
+          fetchMessages();
+        }
+      });
+
+      // Handle connection status
+      socket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+
+      socket.on('reconnect', () => {
+        console.log('Reconnected to server');
+        socket.emit('register', currentUserId);
+      });
+
+      // Back button click
+      backButton.addEventListener('click', () => {
+        showSidebarMobile();
       });
     </script>
 

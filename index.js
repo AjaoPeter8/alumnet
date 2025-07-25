@@ -118,7 +118,25 @@ app.get('/messages', authenticateToken, async (req, res) => {
       WHERE (m.sender_id = ? AND m.receiver_id = ?) OR (m.sender_id = ? AND m.receiver_id = ?)
       ORDER BY m.timestamp ASC
     `, [sender_id, receiver_id, receiver_id, sender_id]);
-    res.json(messages);
+
+    // Avatar mapping (should match /chat route)
+    const avatars = {
+      sophia: '/images/sophia.jpg',
+      ethan: '/images/ethan.jpg',
+      liam: '/images/liam.jpg',
+      olivia: '/images/olivia.jpg',
+      noah: '/images/noah.jpg',
+      ava: '/images/ava.jpg',
+      jackson: '/images/jackson.jpg'
+    };
+    const defaultAvatar = '/images/default-avatar.jpg';
+
+    // Attach avatar_url to each message (for sender)
+    const messagesWithAvatars = messages.map(msg => ({
+      ...msg,
+      avatar_url: avatars[msg.sender?.toLowerCase()] || defaultAvatar
+    }));
+    res.json(messagesWithAvatars);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -136,14 +154,25 @@ app.post('/send', authenticateToken, upload.single('file'), async (req, res) => 
       [sender_id, receiver_id, content || '', file_url, file_name]
     );
 
-    io.to(sender_id).to(receiver_id).emit('privateMessage');
+    // Emit to both sender and receiver with message data
+    const messageData = {
+      sender_id,
+      receiver_id,
+      content: content || '',
+      file_url,
+      file_name,
+      timestamp: new Date()
+    };
+    
+    io.to(sender_id).to(receiver_id).emit('privateMessage', messageData);
     res.json({ success: true });
   } catch (err) {
+    console.error("error:", err);
     console.error('Send error:', err.message);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-server.listen(5000, () => {
-  console.log('Server running on http://localhost:5000');
+server.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
 });
