@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Tester</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-button { margin: 10px; padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Route Tester</h1>
+    
+    <button class="test-button" onclick="testRoute('/admin/test', 'GET')">Test Admin Route</button>
+    <button class="test-button" onclick="testRoute('/admin', 'GET')">Test Admin Dashboard</button>
+    <button class="test-button" onclick="testDeleteRoute('/admin/posts/delete/999', 'DELETE')">Test Delete Post Route</button>
+    <button class="test-button" onclick="testDeleteRoute('/admin/users/delete/999', 'DELETE')">Test Delete User Route</button>
+    <button class="test-button" onclick="testDeleteRoute('/admin/comments/delete/999', 'DELETE')">Test Delete Comment Route</button>
+    
+    <div id="results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong> - ${message}`;
+            results.insertBefore(div, results.firstChild);
+        }
+
+        async function testRoute(url, method) {
+            try {
+                log(`Testing ${method} ${url}...`, 'info');
+                
+                const response = await fetch(url, { method });
+                
+                if (response.ok) {
+                    log(`✅ ${method} ${url} - SUCCESS (${response.status})`, 'success');
+                } else {
+                    log(`❌ ${method} ${url} - FAILED (${response.status})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ ${method} ${url} - ERROR: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDeleteRoute(url, method) {
+            try {
+                log(`Testing ${method} ${url}...`, 'info');
+                
+                const response = await fetch(url, { 
+                    method,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (response.status === 404) {
+                    log(`✅ ${method} ${url} - Route exists (404 = item not found, which is expected)`, 'success');
+                } else if (response.status === 401) {
+                    log(`⚠️ ${method} ${url} - Route exists but unauthorized (need to login as admin)`, 'info');
+                } else if (response.ok) {
+                    log(`✅ ${method} ${url} - SUCCESS (${response.status})`, 'success');
+                } else {
+                    log(`❌ ${method} ${url} - FAILED (${response.status})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ ${method} ${url} - ERROR: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

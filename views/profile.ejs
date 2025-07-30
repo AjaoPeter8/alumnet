@@ -1,290 +1,464 @@
-<html>
-  <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
-    />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlumNet - Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+  </style>
+</head>
 
-    <title></title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+<body class="bg-gray-50 min-h-screen">
+  <%- include("partials/header.ejs") %>
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  </head>
-  <body>
-    <div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
-      <div class="layout-container flex h-full grow flex-col">
-        <div class="gap-1 px-6 flex flex-1 justify-center py-5">
-          <div class="layout-content-container flex flex-col w-80">
-            <div class="flex h-full min-h-[700px] flex-col justify-between bg-gray-50 p-4">
-              <div class="flex flex-col gap-4">
-                <div class="flex gap-3">
-                  <div
-                    class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuALdHl-wFET_sWIins8OhowS5lzKpVTsWPKTsVg7BcbN5-hpzS5gSyHABoMl8YoNJQWmvoR6B2JKtqC3n3rRUOIHcNe9PjzRht0u_cWWJBCcSNxtHMgMsee-85Vxo5jAHKrR_If38XFMLyoi3ncevoKbMjmywDGuIGitWRRInDwc0uGoWiREC5xOq6yhVzjxzK_p9X4OKgoKni41FkkWmvwpD4cWXTKhjeopBtO1oLR2u3GQPBqThAathjSs7-V96eve5ACekPctsyM");'
-                  ></div>
-                  <h1 class="text-[#101418] text-base font-medium leading-normal">AlumNet</h1>
-                </div>
-                <div class="flex flex-col gap-2">
-                  <div class="flex items-center gap-3 px-3 py-2 rounded-full bg-[#eaedf1]">
-                    <div class="text-[#101418]" data-icon="House" data-size="24px" data-weight="fill">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Home</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="ChatCircleDots" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM84,116a12,12,0,1,0,12,12A12,12,0,0,0,84,116Zm88,0a12,12,0,1,0,12,12A12,12,0,0,0,172,116Zm60,12A104,104,0,0,1,79.12,219.82L45.07,231.17a16,16,0,0,1-20.24-20.24l11.35-34.05A104,104,0,1,1,232,128Zm-16,0A88,88,0,1,0,51.81,172.06a8,8,0,0,1,.66,6.54L40,216,77.4,203.53a7.85,7.85,0,0,1,2.53-.42,8,8,0,0,1,4,1.08A88,88,0,0,0,216,128Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Messaging</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="Newspaper" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M88,112a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H96A8,8,0,0,1,88,112Zm8,40h80a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM232,64V184a24,24,0,0,1-24,24H32A24,24,0,0,1,8,184.11V88a8,8,0,0,1,16,0v96a8,8,0,0,0,16,0V64A16,16,0,0,1,56,48H216A16,16,0,0,1,232,64Zm-16,0H56V184a23.84,23.84,0,0,1-1.37,8H208a8,8,0,0,0,8-8Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">News Feed</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="Briefcase" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Jobs</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="Trophy" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M232,64H208V56a16,16,0,0,0-16-16H64A16,16,0,0,0,48,56v8H24A16,16,0,0,0,8,80V96a40,40,0,0,0,40,40h3.65A80.13,80.13,0,0,0,120,191.61V216H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16H136V191.58c31.94-3.23,58.44-25.64,68.08-55.58H208a40,40,0,0,0,40-40V80A16,16,0,0,0,232,64ZM48,120A24,24,0,0,1,24,96V80H48v32q0,4,.39,8Zm144-8.9c0,35.52-28.49,64.64-63.51,64.9H128a64,64,0,0,1-64-64V56H192ZM232,96a24,24,0,0,1-24,24h-.5a81.81,81.81,0,0,0,.5-8.9V80h24Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Achievements</p>
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col gap-4">
-                <button
-                  class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#b2cae5] text-[#101418] text-sm font-bold leading-normal tracking-[0.015em]"
-                >
-                  <span class="truncate">Post</span>
-                </button>
-                <div class="flex flex-col gap-1">
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="UsersThree" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Groups</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="Calendar" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-96-88v64a8,8,0,0,1-16,0V132.94l-4.42,2.22a8,8,0,0,1-7.16-14.32l16-8A8,8,0,0,1,112,120Zm59.16,30.45L152,176h16a8,8,0,0,1,0,16H136a8,8,0,0,1-6.4-12.8l28.78-38.37A8,8,0,1,0,145.07,132a8,8,0,1,1-13.85-8A24,24,0,0,1,176,136,23.76,23.76,0,0,1,171.16,150.45Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Events</p>
-                  </div>
-                  <div class="flex items-center gap-3 px-3 py-2">
-                    <div class="text-[#101418]" data-icon="Hash" data-size="24px" data-weight="regular">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                        <path
-                          d="M224,88H175.4l8.47-46.57a8,8,0,0,0-15.74-2.86l-9,49.43H111.4l8.47-46.57a8,8,0,0,0-15.74-2.86L95.14,88H48a8,8,0,0,0,0,16H92.23L83.5,152H32a8,8,0,0,0,0,16H80.6l-8.47,46.57a8,8,0,0,0,6.44,9.3A7.79,7.79,0,0,0,80,224a8,8,0,0,0,7.86-6.57l9-49.43H144.6l-8.47,46.57a8,8,0,0,0,6.44,9.3A7.79,7.79,0,0,0,144,224a8,8,0,0,0,7.86-6.57l9-49.43H208a8,8,0,0,0,0-16H163.77l8.73-48H224a8,8,0,0,0,0-16Zm-76.5,64H99.77l8.73-48h47.73Z"
-                        ></path>
-                      </svg>
-                    </div>
-                    <p class="text-[#101418] text-sm font-medium leading-normal">Followed Hashtags</p>
-                  </div>
-                </div>
-              </div>
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+      <!-- Cover Photo -->
+      <div class="gradient-bg h-48"></div>
+      
+      <!-- Profile Info -->
+      <div class="px-6 pb-6">
+        <div class="flex flex-col sm:flex-row sm:items-end sm:space-x-6">
+          <!-- Profile Picture -->
+          <div class="relative -mt-16 mb-4 sm:mb-0">
+            <div class="w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
+              <%= (user.full_name || user.username || 'A').charAt(0).toUpperCase() %>
             </div>
           </div>
-          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <div class="flex p-4 @container">
-              <div class="flex w-full flex-col gap-4 items-center">
-                <div class="flex gap-4 flex-col items-center">
-                  <div
-                    class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32"
-                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAYRZy0w1maG94W7JpcEhfPEfri_yH7iE2oUHSHJD4ks90mCB_G6OkM6uB4-AeaTh3WmLoUSkLGAgErq_cSBE0muTppAEhx-ToR_4R3YMH5J9Lbsbh0a6bMisoBGtc6UeVIWMeFz-z4wDYHYhGB_X1t0ICkklJgKp-E9A2DMgudetdyvYVeGBQD-AD4XJs0k-RA6_eU7cmLca7q8R0gU9bFaWaTp-R_nYV9X2j6Cuv0cETPP7lpb_q6H4jXRhGvN9Vpr2kGE8BXvxu6");'
-                  ></div>
-                  <div class="flex flex-col items-center justify-center justify-center">
-                    <p class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">Sophia Bennett</p>
-                    <p class="text-[#5c718a] text-base font-normal leading-normal text-center">Software Engineer at Innovate Solutions | AI Enthusiast</p>
-                    <p class="text-[#5c718a] text-base font-normal leading-normal text-center">San Francisco Bay Area</p>
-                  </div>
+
+          <!-- Name and Info -->
+          <div class="flex-1">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+              <%= user.full_name || user.username || 'Alumni Member' %>
+            </h1>
+            
+            <% if (user.job_title && user.company) { %>
+              <p class="text-lg text-gray-600 mb-3"><%= user.job_title %> at <%= user.company %></p>
+            <% } else if (user.job_title) { %>
+              <p class="text-lg text-gray-600 mb-3"><%= user.job_title %></p>
+            <% } else if (user.company) { %>
+              <p class="text-lg text-gray-600 mb-3">Works at <%= user.company %></p>
+            <% } else { %>
+              <p class="text-lg text-gray-600 mb-3">Alumni Member</p>
+            <% } %>
+
+            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+              <% if (user.location) { %>
+                <div class="flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                  </svg>
+                  <span><%= user.location %></span>
                 </div>
-                <button
-                  class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#eaedf1] text-[#101418] text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[480px]:w-auto"
-                >
-                  <span class="truncate">Connect</span>
-                </button>
-              </div>
+              <% } %>
+              
+              <% if (user.graduation_year) { %>
+                <div class="flex items-center space-x-1">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                  </svg>
+                  <span>Class of <%= user.graduation_year %></span>
+                </div>
+              <% } %>
             </div>
-            <div class="pb-3">
-              <div class="flex border-b border-[#d4dbe2] px-4 gap-8">
-                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-[#b2cae5] text-[#101418] pb-[13px] pt-4" href="#">
-                  <p class="text-[#101418] text-sm font-bold leading-normal tracking-[0.015em]">About</p>
-                </a>
-                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#5c718a] pb-[13px] pt-4" href="#">
-                  <p class="text-[#5c718a] text-sm font-bold leading-normal tracking-[0.015em]">Activity</p>
-                </a>
-                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#5c718a] pb-[13px] pt-4" href="#">
-                  <p class="text-[#5c718a] text-sm font-bold leading-normal tracking-[0.015em]">Experience</p>
-                </a>
-                <a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-[#5c718a] pb-[13px] pt-4" href="#">
-                  <p class="text-[#5c718a] text-sm font-bold leading-normal tracking-[0.015em]">Skills</p>
-                </a>
-              </div>
-            </div>
-            <h2 class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">About</h2>
-            <p class="text-[#101418] text-base font-normal leading-normal pb-3 pt-1 px-4">
-              Highly motivated Software Engineer with 5+ years of experience in developing innovative solutions. Passionate about leveraging AI and machine learning to solve
-              complex problems. Proven track record of delivering high-quality software and collaborating effectively in team environments.
-            </p>
-            <h2 class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Experience</h2>
-            <div class="flex gap-4 bg-gray-50 px-4 py-3">
-              <div
-                class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[70px]"
-                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAe7YjZ_wleko52LBaAswbwum8CrOAWBj_eXYl5lHcTASIB2T_EL7weBnVNn1wJsO_OpQsR4TvGuaHQLPjP6qFqfg_3XJaBZRvSPEDfeZWBg22yMYGWqoCyyep1f5IRmwejxx-oM6m0__eKyV45My2fzcBtNiLLNfXcm3qeMnnzilznMHmXE0JbIlAJ-hIMpUt2vVNLBqS7Ra60-shj3pPrNpr5RBjdDL5VVM7wMndTE7u9cC8zRoXq0PgrFKRY_PFdh-17Rj4yhtVw");'
-              ></div>
-              <div class="flex flex-1 flex-col justify-center">
-                <p class="text-[#101418] text-base font-medium leading-normal">Software Engineer</p>
-                <p class="text-[#5c718a] text-sm font-normal leading-normal">Jan 2019 - Present · 5 yr 6 mo</p>
-                <p class="text-[#5c718a] text-sm font-normal leading-normal">Full-time · 5 yr 6 mo</p>
-              </div>
-            </div>
-            <h2 class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Skills</h2>
-            <div class="flex gap-3 p-3 flex-wrap pr-4">
-              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#eaedf1] pl-4 pr-4">
-                <p class="text-[#101418] text-sm font-medium leading-normal">Python</p>
-              </div>
-              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#eaedf1] pl-4 pr-4">
-                <p class="text-[#101418] text-sm font-medium leading-normal">Machine Learning</p>
-              </div>
-              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#eaedf1] pl-4 pr-4">
-                <p class="text-[#101418] text-sm font-medium leading-normal">Data Analysis</p>
-              </div>
-              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#eaedf1] pl-4 pr-4">
-                <p class="text-[#101418] text-sm font-medium leading-normal">Software Development</p>
-              </div>
-              <div class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#eaedf1] pl-4 pr-4">
-                <p class="text-[#101418] text-sm font-medium leading-normal">Team Collaboration</p>
-              </div>
-            </div>
-            <h2 class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Accomplishments</h2>
-            <div class="flex items-center gap-4 bg-gray-50 px-4 min-h-[72px] py-2">
-              <div class="text-[#101418] flex items-center justify-center rounded-lg bg-[#eaedf1] shrink-0 size-12" data-icon="UsersThree" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z"
-                  ></path>
-                </svg>
-              </div>
-              <div class="flex flex-col justify-center">
-                <p class="text-[#101418] text-base font-medium leading-normal line-clamp-1">AI and Machine Learning Group</p>
-                <p class="text-[#5c718a] text-sm font-normal leading-normal line-clamp-2">100+ members</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 bg-gray-50 px-4 min-h-[72px] py-2">
-              <div class="text-[#101418] flex items-center justify-center rounded-lg bg-[#eaedf1] shrink-0 size-12" data-icon="UsersThree" data-size="24px" data-weight="regular">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                  <path
-                    d="M244.8,150.4a8,8,0,0,1-11.2-1.6A51.6,51.6,0,0,0,192,128a8,8,0,0,1-7.37-4.89,8,8,0,0,1,0-6.22A8,8,0,0,1,192,112a24,24,0,1,0-23.24-30,8,8,0,1,1-15.5-4A40,40,0,1,1,219,117.51a67.94,67.94,0,0,1,27.43,21.68A8,8,0,0,1,244.8,150.4ZM190.92,212a8,8,0,1,1-13.84,8,57,57,0,0,0-98.16,0,8,8,0,1,1-13.84-8,72.06,72.06,0,0,1,33.74-29.92,48,48,0,1,1,58.36,0A72.06,72.06,0,0,1,190.92,212ZM128,176a32,32,0,1,0-32-32A32,32,0,0,0,128,176ZM72,120a8,8,0,0,0-8-8A24,24,0,1,1,87.24,82a8,8,0,1,0,15.5-4A40,40,0,1,0,37,117.51,67.94,67.94,0,0,0,9.6,139.19a8,8,0,1,0,12.8,9.61A51.6,51.6,0,0,1,64,128,8,8,0,0,0,72,120Z"
-                  ></path>
-                </svg>
-              </div>
-              <div class="flex flex-col justify-center">
-                <p class="text-[#101418] text-base font-medium leading-normal line-clamp-1">Software Engineering Professionals</p>
-                <p class="text-[#5c718a] text-sm font-normal leading-normal line-clamp-2">100+ members</p>
-              </div>
-            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex space-x-3 mt-4 sm:mt-0">
+            <button onclick="openEditModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition duration-300 flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              <span>Edit Profile</span>
+            </button>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium transition duration-300 flex items-center space-x-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+              <span>Message</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </body>
-</html>
 
-
-<html>
-
-<head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'"
-        href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800" />
-
-    <title>AlumNet</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-
-    <style>
-        html {
-            overflow: hidden;
-        }
-
-        div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: auto;
-            height: 100%;
-        }
-
-        .blinking-text {
-            animation: blink 1s infinite;
-            /* 'blink' is the name of the animation, 1s is the duration, 'infinite' makes it loop */
-            color: black;
-            font-size: 80px;
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: 1;
-            }
-
-            /* At the start, fully visible */
-            50% {
-                opacity: 0;
-            }
-
-            /* At 50% of the animation, completely transparent */
-            100% {
-                opacity: 1;
-            }
-
-            /* At the end, fully visible again */
-        }
-    </style>
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-</head>
-
-<body>
-    <%- include ("partials/header.ejs") %>
-        <div>
-            <h2 class="blinking-text">Coming Soon...</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- About Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">About</h2>
+          <% if (user.bio) { %>
+            <p class="text-gray-600 leading-relaxed"><%= user.bio %></p>
+          <% } else { %>
+            <p class="text-gray-500 italic">No bio available yet.</p>
+          <% } %>
         </div>
-</body>
 
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Recent Activity</h2>
+          <div class="space-y-4">
+            <% if (user.activities && user.activities.length > 0) { %>
+              <% user.activities.slice(0, 5).forEach(activity => { %>
+                <div class="flex items-start space-x-3">
+                  <div class="w-8 h-8 bg-<%= activity.type === 'profile_update' ? 'blue' : activity.type === 'post' ? 'green' : activity.type === 'connection' ? 'purple' : 'gray' %>-100 rounded-full flex items-center justify-center">
+                    <% if (activity.type === 'profile_update') { %>
+                      <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                    <% } else if (activity.type === 'post') { %>
+                      <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                    <% } else if (activity.type === 'connection') { %>
+                      <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                      </svg>
+                    <% } else { %>
+                      <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    <% } %>
+                  </div>
+                  <div class="flex-1">
+                    <p class="text-gray-900"><%= activity.description %></p>
+                    <p class="text-sm text-gray-500"><%= activity.created_at ? new Date(activity.created_at).toLocaleDateString() : 'Recently' %></p>
+                  </div>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="text-center py-8">
+                <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <p class="text-gray-500">No recent activity to display</p>
+                <p class="text-sm text-gray-400 mt-1">Start by updating your profile or connecting with other alumni</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="space-y-8">
+        <!-- Skills Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-gray-900">Skills</h2>
+            <button onclick="openSkillsModal()" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center space-x-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              <span>Add Skill</span>
+            </button>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <% if (user.skills && user.skills.length > 0) { %>
+              <% user.skills.forEach((skill, index) => { %>
+                <div class="relative group">
+                  <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium pr-8"><%= skill %></span>
+                  <button onclick="removeSkill('<%= skill %>')" class="absolute right-1 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <div class="text-center py-6 w-full">
+                <svg class="w-8 h-8 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+                <p class="text-gray-500 text-sm">No skills added yet</p>
+                <p class="text-gray-400 text-xs mt-1">Click "Add Skill" to showcase your expertise</p>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Contact</h2>
+          <div class="space-y-3">
+            <% if (user.email) { %>
+              <div class="flex items-center space-x-3">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-gray-600"><%= user.email %></span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold text-gray-900">Edit Profile</h2>
+          <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <form id="editProfileForm" class="p-6">
+        <div class="space-y-6">
+          <!-- Personal Information -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input type="text" name="full_name" value="<%= user.full_name || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input type="email" name="email" value="<%= user.email || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                <input type="tel" name="phone" value="<%= user.phone || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                <input type="text" name="location" value="<%= user.location || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Information -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Professional Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
+                <input type="text" name="job_title" value="<%= user.job_title || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                <input type="text" name="company" value="<%= user.company || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Field of Study</label>
+                <input type="text" name="field_of_study" value="<%= user.field_of_study || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Graduation Year</label>
+                <input type="number" name="graduation_year" value="<%= user.graduation_year || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              </div>
+            </div>
+          </div>
+
+          <!-- About -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">About</h3>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+              <textarea name="bio" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"><%= user.bio || '' %></textarea>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Social Links</h3>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
+              <input type="url" name="linkedin" value="<%= user.linkedin || '' %>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-3 mt-8">
+          <button type="button" onclick="closeEditModal()" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Skills Modal -->
+  <div id="skillsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-gray-900">Add Skill</h2>
+          <button onclick="closeSkillsModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <form id="skillsForm" class="p-6">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Skill Name</label>
+          <input type="text" id="skillInput" placeholder="e.g., JavaScript, Python, Marketing" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div class="flex justify-end space-x-3">
+          <button type="button" onclick="closeSkillsModal()" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Add Skill
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Modal functions
+    function openEditModal() {
+      document.getElementById('editProfileModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+      document.getElementById('editProfileModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openSkillsModal() {
+      document.getElementById('skillsModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      document.getElementById('skillInput').focus();
+    }
+
+    function closeSkillsModal() {
+      document.getElementById('skillsModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+      document.getElementById('skillInput').value = '';
+    }
+
+    // Close modals when clicking outside
+    document.getElementById('editProfileModal').addEventListener('click', function (e) {
+      if (e.target === this) closeEditModal();
+    });
+
+    document.getElementById('skillsModal').addEventListener('click', function (e) {
+      if (e.target === this) closeSkillsModal();
+    });
+
+    // Handle profile form submission
+    document.getElementById('editProfileForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+      const profileData = {};
+
+      for (let [key, value] of formData.entries()) {
+        profileData[key] = value;
+      }
+
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = 'Saving...';
+      submitBtn.disabled = true;
+
+      fetch('/api/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Profile updated successfully!');
+          closeEditModal();
+          window.location.reload();
+        } else {
+          alert('Failed to update profile: ' + (data.message || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to update profile. Please try again.');
+      })
+      .finally(() => {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      });
+    });
+
+    // Handle skills form submission
+    document.getElementById('skillsForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      
+      const skillInput = document.getElementById('skillInput');
+      const skill = skillInput.value.trim();
+      
+      if (!skill) {
+        alert('Please enter a skill name');
+        return;
+      }
+
+      fetch('/api/profile/skills/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ skill: skill })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          closeSkillsModal();
+          window.location.reload();
+        } else {
+          alert('Failed to add skill: ' + (data.message || 'Unknown error'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to add skill. Please try again.');
+      });
+    });
+
+    // Remove skill function
+    function removeSkill(skill) {
+      if (confirm('Are you sure you want to remove this skill?')) {
+        fetch('/api/profile/skills/remove', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ skill: skill })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.reload();
+          } else {
+            alert('Failed to remove skill: ' + (data.message || 'Unknown error'));
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to remove skill. Please try again.');
+        });
+      }
+    }
+  </script>
+</body>
 </html>

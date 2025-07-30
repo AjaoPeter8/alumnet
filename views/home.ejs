@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AlumNet</title>
+  <title>AlumNet - Connect. Collaborate. Succeed Together.</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -19,24 +19,287 @@
       margin: 0;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    .blinking-text {
-      animation: blink 1s infinite;
-      color: black;
-      font-size: 3rem;
-      text-align: center;
+    
+    .gradient-bg {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
-    @keyframes blink {
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+      50% { opacity: 0.8; }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.8s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="bg-gray-50 min-h-screen">
   <%- include("partials/header.ejs") %>
 
-  <div class="flex-grow flex justify-center items-center">
-    <h2 class="blinking-text">Welcome <%= user.username %> — AlumNet Coming Soon...</h2>
-  </div>
+  <!-- Hero Section -->
+  <section class="gradient-bg text-white py-20 fade-in">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+          Welcome back, <span class="text-yellow-300"><%= user.username %></span>!
+        </h1>
+        <p class="text-xl md:text-2xl mb-4 font-medium">
+          Connect. Collaborate. Succeed Together.
+        </p>
+        <p class="text-lg mb-8 max-w-2xl mx-auto opacity-90">
+          Your gateway to a thriving alumni network. Discover opportunities, share achievements, and build lasting professional relationships.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/chat" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+            Start Networking
+          </a>
+          <a href="/jobs" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+            Explore Opportunities
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Everything You Need to Succeed
+        </h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          Powerful tools to help you connect, grow, and achieve your professional goals
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Network & Chat -->
+        <div class="card-hover bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Network & Chat</h3>
+          <p class="text-gray-600 mb-4">Connect with fellow alumni through our integrated chat system and build meaningful relationships.</p>
+          <a href="/chat" class="text-blue-600 font-medium hover:text-blue-800 transition duration-300">Start Chatting →</a>
+        </div>
+
+        <!-- Career Opportunities -->
+        <div class="card-hover bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Career Opportunities</h3>
+          <p class="text-gray-600 mb-4">Discover exclusive job openings and internships shared by your alumni network.</p>
+          <a href="/jobs" class="text-green-600 font-medium hover:text-green-800 transition duration-300">Browse Jobs →</a>
+        </div>
+
+        <!-- News & Updates -->
+        <div class="card-hover bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">News & Updates</h3>
+          <p class="text-gray-600 mb-4">Stay informed with the latest news, events, and updates from your alma mater.</p>
+          <a href="/news" class="text-purple-600 font-medium hover:text-purple-800 transition duration-300">Read News →</a>
+        </div>
+
+        <!-- Achievements -->
+        <div class="card-hover bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Achievements</h3>
+          <p class="text-gray-600 mb-4">Celebrate success stories and showcase your professional accomplishments.</p>
+          <a href="/achievements" class="text-yellow-600 font-medium hover:text-yellow-800 transition duration-300">View Achievements →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-12 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <div class="text-3xl md:text-4xl font-bold text-blue-600 pulse-animation">2,500+</div>
+          <div class="text-gray-600 font-medium">Active Alumni</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-bold text-green-600 pulse-animation">850+</div>
+          <div class="text-gray-600 font-medium">Job Placements</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-bold text-purple-600 pulse-animation">1,200+</div>
+          <div class="text-gray-600 font-medium">Connections Made</div>
+        </div>
+        <div>
+          <div class="text-3xl md:text-4xl font-bold text-yellow-600 pulse-animation">95%</div>
+          <div class="text-gray-600 font-medium">Success Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Activity Section -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          What's Happening
+        </h2>
+        <p class="text-xl text-gray-600">
+          Stay updated with the latest activities in your network
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Recent News -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">📰 Latest News</h3>
+          <div class="space-y-3">
+            <div class="border-l-4 border-blue-500 pl-4">
+              <p class="text-sm text-gray-600">University announces new scholarship program for alumni children</p>
+              <span class="text-xs text-gray-400">2 hours ago</span>
+            </div>
+            <div class="border-l-4 border-green-500 pl-4">
+              <p class="text-sm text-gray-600">Alumni startup secures $2M in Series A funding</p>
+              <span class="text-xs text-gray-400">5 hours ago</span>
+            </div>
+          </div>
+          <a href="/news" class="text-blue-600 text-sm font-medium hover:text-blue-800 transition duration-300 mt-4 inline-block">View All News →</a>
+        </div>
+
+        <!-- Recent Jobs -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">💼 New Opportunities</h3>
+          <div class="space-y-3">
+            <div class="border-l-4 border-green-500 pl-4">
+              <p class="text-sm text-gray-600">Senior Software Engineer at TechCorp</p>
+              <span class="text-xs text-gray-400">Posted by John Doe '18</span>
+            </div>
+            <div class="border-l-4 border-purple-500 pl-4">
+              <p class="text-sm text-gray-600">Marketing Internship at StartupXYZ</p>
+              <span class="text-xs text-gray-400">Posted by Sarah Smith '20</span>
+            </div>
+          </div>
+          <a href="/jobs" class="text-green-600 text-sm font-medium hover:text-green-800 transition duration-300 mt-4 inline-block">Browse All Jobs →</a>
+        </div>
+
+        <!-- Recent Achievements -->
+        <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">🏆 Recent Achievements</h3>
+          <div class="space-y-3">
+            <div class="border-l-4 border-yellow-500 pl-4">
+              <p class="text-sm text-gray-600">Mike Johnson promoted to VP at Fortune 500 company</p>
+              <span class="text-xs text-gray-400">Class of '15</span>
+            </div>
+            <div class="border-l-4 border-red-500 pl-4">
+              <p class="text-sm text-gray-600">Lisa Chen wins Young Entrepreneur Award</p>
+              <span class="text-xs text-gray-400">Class of '19</span>
+            </div>
+          </div>
+          <a href="/achievements" class="text-yellow-600 text-sm font-medium hover:text-yellow-800 transition duration-300 mt-4 inline-block">View All Achievements →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="py-16 gradient-bg text-white">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">
+        Ready to Expand Your Network?
+      </h2>
+      <p class="text-xl mb-8 opacity-90">
+        Join thousands of alumni who are already building meaningful connections and advancing their careers.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/chat" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+          Start Connecting Today
+        </a>
+        <a href="/profile" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+          Complete Your Profile
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">AlumNet</h3>
+          <p class="text-gray-400">Connecting alumni, creating opportunities, building futures together.</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Quick Links</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="/chat" class="hover:text-white transition duration-300">Network</a></li>
+            <li><a href="/jobs" class="hover:text-white transition duration-300">Careers</a></li>
+            <li><a href="/news" class="hover:text-white transition duration-300">News</a></li>
+            <li><a href="/achievements" class="hover:text-white transition duration-300">Success Stories</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Support</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-white transition duration-300">Help Center</a></li>
+            <li><a href="#" class="hover:text-white transition duration-300">Contact Us</a></li>
+            <li><a href="#" class="hover:text-white transition duration-300">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition duration-300">Terms of Service</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Stay Connected</h4>
+          <p class="text-gray-400 mb-4">Follow us for the latest updates and alumni success stories.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+              </svg>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; 2024 AlumNet. All rights reserved. Built with ❤️ for our amazing alumni community.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

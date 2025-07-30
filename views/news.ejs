@@ -1,74 +1,725 @@
-<html>
-  <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
-    />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlumNet - News & Updates</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <title>AlumNet</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  </head>
-  <body>
-    <div class="relative flex size-full min-h-screen flex-col bg-gray-50 group/design-root overflow-x-hidden" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
-      <div class="layout-container flex h-full grow flex-col">
-        <%- include ("partials/header.ejs") %>
-        <div class="px-40 flex flex-1 justify-center py-5">
-          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <!-- <div class="px-4 py-3">
-              <label class="flex flex-col min-w-40 h-12 w-full">
-                <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
-                  <div
-                    class="text-[#5c718a] flex border-none bg-[#eaedf1] items-center justify-center pl-4 rounded-l-xl border-r-0"
-                    data-icon="MagnifyingGlass"
-                    data-size="24px"
-                    data-weight="regular"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                      <path
-                        d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <input
-                    placeholder="Search"
-                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#101418] focus:outline-0 focus:ring-0 border-none bg-[#eaedf1] focus:border-none h-full placeholder:text-[#5c718a] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
-                    value=""
-                  />
-                </div>
-              </label>
-            </div> -->
-            <h2 class="text-[#101418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Latest Updates</h2>
-            <div class="p-4 @container">
-              <div class="flex flex-col items-stretch justify-start rounded-xl @xl:flex-row @xl:items-start">
-                <div
-                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDO-yrEioe7gFoUieFDr9lkB4idT3YRySA4K-P9wlHCDpZniLwnN6F3eC8hF0FH87D_vJi3mCg8cW8Tgvz6rhQZ0zN-7hxtIoye7PAo8OLT5heIL561_MMZnzA1It4l9sePSnyX_dLlTDAupQB5Nx0ioPwSPvl02-C_DI0T3o5cbL_9080jJ292R4D6B14ke4H7YqfQP1qCr3JL3jVUcC2PjUMXGx88aatqLByQyJC_Kd1szF9L5GCaqvioNK7R-4DdpPP7cQSoUb-W");'
-                ></div>
-                <div class="flex w-full min-w-72 grow flex-col items-stretch justify-center gap-1 py-4 @xl:px-4">
-                  <p class="text-[#101418] text-lg font-bold leading-tight tracking-[-0.015em]">Tech Industry Trends: AI and Automation</p>
-                  <div class="flex items-end gap-3 justify-between">
-                    <p class="text-[#5c718a] text-base font-normal leading-normal">
-                      Explore the latest advancements in artificial intelligence and automation, and their impact on various industries.
-                    </p>
-                    <button
-                      class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 bg-[#b2cae5] text-[#101418] text-sm font-medium leading-normal"
-                    >
-                      <span class="truncate">Read More</span>
-                    </button>
-                  </div>
-                </div>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <style>
+    html, body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    
+    .news-card {
+      transition: all 0.3s ease;
+    }
+    
+    .news-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .comment-form {
+      transition: all 0.3s ease;
+    }
+    
+    .comment-item {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .featured-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+  <%- include("partials/header.ejs") %>
+
+  <!-- Create Post Modal -->
+  <div id="createPostModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+          <h2 class="text-xl font-bold text-gray-900">Create New Post</h2>
+          <button onclick="closeCreatePostModal()" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Modal Content -->
+        <form id="createPostForm" onsubmit="submitNewPost(event)" class="p-6 space-y-6">
+          <!-- Title Input -->
+          <div>
+            <label for="postTitle" class="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+            <input 
+              type="text" 
+              id="postTitle" 
+              name="title" 
+              required
+              maxlength="200"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter an engaging title for your post..."
+            />
+          </div>
+
+          <!-- Category Selection -->
+          <div>
+            <label for="postCategory" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <select 
+              id="postCategory" 
+              name="category"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="general">General</option>
+              <option value="technology">Technology</option>
+              <option value="business">Business</option>
+              <option value="education">Education</option>
+              <option value="career">Career</option>
+              <option value="achievement">Achievement</option>
+              <option value="event">Event</option>
+            </select>
+          </div>
+
+          <!-- Content Textarea -->
+          <div>
+            <label for="postContent" class="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+            <textarea 
+              id="postContent" 
+              name="content" 
+              required
+              rows="6"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              placeholder="Share your thoughts, updates, or announcements with the alumni community..."
+            ></textarea>
+            <div class="text-right text-sm text-gray-500 mt-1">
+              <span id="contentCounter">0</span> characters
+            </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div>
+            <label for="postImage" class="block text-sm font-medium text-gray-700 mb-2">Image (Optional)</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition duration-300">
+              <input 
+                type="file" 
+                id="postImage" 
+                name="image" 
+                accept="image/*"
+                class="hidden"
+                onchange="handleImagePreview(event)"
+              />
+              <div id="imageUploadArea" class="cursor-pointer" onclick="document.getElementById('postImage').click()">
+                <svg class="w-12 h-12 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-gray-600">Click to upload an image</p>
+                <p class="text-sm text-gray-400">PNG, JPG, GIF up to 10MB</p>
+              </div>
+              <div id="imagePreview" class="hidden">
+                <img id="previewImg" src="" alt="Preview" class="max-w-full h-48 object-cover rounded-lg mx-auto">
+                <button type="button" onclick="removeImagePreview()" class="mt-2 text-red-600 hover:text-red-800 text-sm">
+                  Remove image
+                </button>
               </div>
             </div>
           </div>
+
+          <!-- Modal Footer -->
+          <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+            <button 
+              type="button" 
+              onclick="closeCreatePostModal()"
+              class="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition duration-300"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              id="submitPostBtn"
+              class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition duration-300"
+            >
+              Publish Post
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">News & Updates</h1>
+          <p class="text-lg text-gray-600">Stay connected with the latest news and updates from your alumni community</p>
+        </div>
+        <div class="mt-4 sm:mt-0">
+          <button 
+            id="createPostBtn"
+            onclick="openCreatePostModal()"
+            class="group relative bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center space-x-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-blue-300"
+          >
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              <span class="font-medium">Create Post</span>
+            </div>
+            <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 rounded-xl transition-opacity duration-300"></div>
+          </button>
         </div>
       </div>
     </div>
 
-    <script src="index.js"></script>
-  </body>
+    <!-- News Feed -->
+    <div class="space-y-8">
+      <% if (newsPosts && newsPosts.length > 0) { %>
+        <% newsPosts.forEach(function(post) { %>
+          <article class="news-card bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <!-- Featured Badge -->
+            <% if (post.is_featured) { %>
+              <div class="featured-badge text-white text-sm font-medium px-4 py-2">
+                ⭐ Featured Story
+              </div>
+            <% } %>
+            
+            <!-- News Image -->
+            <% if (post.image_url) { %>
+              <div class="aspect-video bg-gray-200 overflow-hidden">
+                <img src="<%= post.image_url %>" alt="<%= post.title %>" class="w-full h-full object-cover">
+              </div>
+            <% } %>
+            
+            <!-- News Content -->
+            <div class="p-6">
+              <!-- Category & Date -->
+              <div class="flex items-center justify-between mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
+                  <%= post.category || 'General' %>
+                </span>
+                <time class="text-sm text-gray-500">
+                  <%= new Date(post.created_at).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }) %>
+                </time>
+              </div>
+              
+              <!-- Title -->
+              <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-3">
+                <%= post.title %>
+              </h2>
+              
+              <!-- Content -->
+              <div class="prose prose-gray max-w-none mb-6">
+                <p class="text-gray-700 leading-relaxed">
+                  <%= post.content %>
+                </p>
+              </div>
+              
+              <!-- Author and Post Actions -->
+              <div class="flex items-center justify-between mb-6 pb-6 border-b border-gray-100">
+                <div class="flex items-center">
+                  <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                    <%= (post.full_name || post.username || 'A').charAt(0).toUpperCase() %>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium text-gray-900">
+                      <%= post.full_name || post.username || 'Anonymous' %>
+                    </p>
+                    <p class="text-xs text-gray-500">Alumni Author</p>
+                  </div>
+                </div>
+                
+                <!-- Post Actions (visible to author and admin) -->
+                <% if (user.user_id === post.user_id || user.role === 'admin') { %>
+                  <div class="flex items-center space-x-2">
+                    <button 
+                      onclick="confirmDeletePost('<%= post.news_id %>', '<%= post.title %>')"
+                      class="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition duration-300"
+                      title="Delete post"
+                    >
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                    </button>
+                  </div>
+                <% } %>
+              </div>
+              
+              <!-- Comments Section -->
+              <div class="comments-section">
+                <!-- Comments Header -->
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-lg font-semibold text-gray-900">
+                    Comments (<span class="comment-count-<%= post.news_id %>"><%= post.comments ? post.comments.length : 0 %></span>)
+                  </h3>
+                  <button onclick="toggleComments('<%= post.news_id %>')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    <span id="toggle-text-<%= post.news_id %>">Show Comments</span>
+                  </button>
+                </div>
+                
+                <!-- Comments Container -->
+                <div id="comments-<%= post.news_id %>" class="comments-container hidden">
+                  <!-- Comment Form -->
+                  <div class="comment-form bg-gray-50 rounded-lg p-4 mb-6">
+                    <form onsubmit="submitComment(event, '<%= post.news_id %>')" class="space-y-3">
+                      <textarea 
+                        name="content" 
+                        placeholder="Share your thoughts on this news..." 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        rows="3"
+                        required
+                      ></textarea>
+                      <div class="flex justify-end">
+                        <button 
+                          type="submit" 
+                          class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300 font-medium"
+                        >
+                          Post Comment
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                  
+                  <!-- Comments List -->
+                  <div id="comments-list-<%= post.news_id %>" class="space-y-4">
+                    <% if (post.comments && post.comments.length > 0) { %>
+                      <% post.comments.forEach(function(comment) { %>
+                        <div class="comment-item bg-white rounded-lg p-4 border border-gray-100">
+                          <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                              <%= (comment.full_name || comment.username || 'A').charAt(0).toUpperCase() %>
+                            </div>
+                            <div class="flex-1">
+                              <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-sm font-semibold text-gray-900">
+                                  <%= comment.full_name || comment.username || 'Anonymous' %>
+                                </h4>
+                                <time class="text-xs text-gray-500">
+                                  <%= new Date(comment.created_at).toLocaleDateString('en-US', { 
+                                    month: 'short', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  }) %>
+                                </time>
+                              </div>
+                              <p class="text-gray-700 text-sm leading-relaxed">
+                                <%= comment.content %>
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    <% } else { %>
+                      <div class="text-center py-8 text-gray-500">
+                        <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.13 8.13 0 01-2.939-.542l-3.677.865a.75.75 0 01-.92-.92l.865-3.677A8.13 8.13 0 013 12a8 8 0 018-8 8 8 0 018 8z"></path>
+                        </svg>
+                        <p>No comments yet. Be the first to share your thoughts!</p>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        <% }); %>
+      <% } else { %>
+        <!-- Empty State -->
+        <div class="text-center py-12">
+          <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+          </svg>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">No news available</h3>
+          <p class="text-gray-500">Check back later for the latest updates from your alumni community.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Ensure DOM is loaded before adding event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add fallback event listener for create post button
+      const createPostBtn = document.getElementById('createPostBtn');
+      if (createPostBtn) {
+        createPostBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Create post button clicked');
+          openCreatePostModal();
+        });
+      }
+
+      // Add event listener for content counter
+      const contentTextarea = document.getElementById('postContent');
+      if (contentTextarea) {
+        contentTextarea.addEventListener('input', updateContentCounter);
+      }
+
+      // Close modal when clicking outside
+      const modal = document.getElementById('createPostModal');
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            closeCreatePostModal();
+          }
+        });
+      }
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const modal = document.getElementById('createPostModal');
+          if (modal && !modal.classList.contains('hidden')) {
+            closeCreatePostModal();
+          }
+        }
+      });
+    });
+
+    // Modal functions
+    function openCreatePostModal() {
+      console.log('Opening create post modal');
+      const modal = document.getElementById('createPostModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on the title input
+        setTimeout(() => {
+          const titleInput = document.getElementById('postTitle');
+          if (titleInput) {
+            titleInput.focus();
+          }
+        }, 100);
+      } else {
+        console.error('Create post modal not found');
+      }
+    }
+
+    function closeCreatePostModal() {
+      console.log('Closing create post modal');
+      const modal = document.getElementById('createPostModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+        
+        // Reset form
+        const form = document.getElementById('createPostForm');
+        if (form) {
+          form.reset();
+        }
+        removeImagePreview();
+        updateContentCounter();
+      }
+    }
+
+    // Toggle comments visibility
+    function toggleComments(newsId) {
+      const commentsContainer = document.getElementById(`comments-${newsId}`);
+      const toggleText = document.getElementById(`toggle-text-${newsId}`);
+      
+      if (commentsContainer.classList.contains('hidden')) {
+        commentsContainer.classList.remove('hidden');
+        toggleText.textContent = 'Hide Comments';
+      } else {
+        commentsContainer.classList.add('hidden');
+        toggleText.textContent = 'Show Comments';
+      }
+    }
+
+    // Submit comment
+    async function submitComment(event, newsId) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      console.log('Form submission started');
+      
+      const form = event.target;
+      const formData = new FormData(form);
+      const content = formData.get('content');
+      
+      if (!content.trim()) return;
+      
+      console.log('Submitting comment for news:', newsId);
+      console.log('Comment content:', content.trim());
+      
+      try {
+        const response = await fetch(`/news/${encodeURIComponent(newsId)}/comment`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // Include cookies for authentication
+          body: JSON.stringify({ content: content.trim() })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Clear form
+          form.reset();
+          
+          // Add new comment to the list
+          addCommentToList(newsId, result.comment);
+          
+          // Update comment count
+          updateCommentCount(newsId, 1);
+          
+          // Show success message
+          showNotification('Comment posted successfully!', 'success');
+        } else {
+          showNotification('Failed to post comment. Please try again.', 'error');
+        }
+      } catch (error) {
+        console.error('Error posting comment:', error);
+        showNotification('An error occurred. Please try again.', 'error');
+      }
+    }
+
+    // Add comment to the list
+    function addCommentToList(newsId, comment) {
+      const commentsList = document.getElementById(`comments-list-${newsId}`);
+      const emptyState = commentsList.querySelector('.text-center');
+      
+      // Remove empty state if it exists
+      if (emptyState) {
+        emptyState.remove();
+      }
+      
+      // Create new comment element
+      const commentElement = document.createElement('div');
+      commentElement.className = 'comment-item bg-white rounded-lg p-4 border border-gray-100';
+      
+      const commentDate = new Date(comment.created_at).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      const authorInitial = (comment.full_name || comment.username || 'A').charAt(0).toUpperCase();
+      
+      commentElement.innerHTML = `
+        <div class="flex items-start space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+            ${authorInitial}
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-1">
+              <h4 class="text-sm font-semibold text-gray-900">
+                ${comment.full_name || comment.username || 'Anonymous'}
+              </h4>
+              <time class="text-xs text-gray-500">
+                ${commentDate}
+              </time>
+            </div>
+            <p class="text-gray-700 text-sm leading-relaxed">
+              ${comment.content}
+            </p>
+          </div>
+        </div>
+      `;
+      
+      // Add to the end of comments list
+      commentsList.appendChild(commentElement);
+    }
+
+    // Update comment count
+    function updateCommentCount(newsId, increment) {
+      // Escape forward slashes for CSS selector
+      const escapedNewsId = newsId.replace(/\//g, '\\/');
+      const countElement = document.querySelector(`.comment-count-${escapedNewsId}`);
+      if (countElement) {
+        const currentCount = parseInt(countElement.textContent) || 0;
+        countElement.textContent = currentCount + increment;
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+
+    // Image preview functions
+    function handleImagePreview(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('previewImg').src = e.target.result;
+          document.getElementById('imageUploadArea').classList.add('hidden');
+          document.getElementById('imagePreview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removeImagePreview() {
+      document.getElementById('postImage').value = '';
+      document.getElementById('imageUploadArea').classList.remove('hidden');
+      document.getElementById('imagePreview').classList.add('hidden');
+    }
+
+    // Content counter
+    function updateContentCounter() {
+      const content = document.getElementById('postContent').value || '';
+      document.getElementById('contentCounter').textContent = content.length;
+    }
+
+    // Submit new post
+    async function submitNewPost(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      console.log('Form submission started');
+      
+      const form = event.target;
+      const formData = new FormData(form);
+      const submitBtn = document.getElementById('submitPostBtn');
+      
+      // Log form data for debugging
+      console.log('Form data contents:');
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Publishing...';
+      
+      try {
+        console.log('Sending POST request to /news/create');
+        
+        const response = await fetch('/news/create', {
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Server error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        }
+        
+        const result = await response.json();
+        console.log('Post creation result:', result);
+        
+        if (result.success) {
+          // Close modal
+          closeCreatePostModal();
+          
+          // Show success message
+          showNotification('Post published successfully!', 'success');
+          
+          // Reload page to show new post
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          throw new Error(result.message || 'Failed to create post');
+        }
+      } catch (error) {
+        console.error('Error creating post:', error);
+        showNotification(`Error: ${error.message}`, 'error');
+      } finally {
+        // Re-enable submit button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publish Post';
+      }
+    }
+
+    // Confirm delete post
+    function confirmDeletePost(newsId, title) {
+      const confirmed = confirm(`Are you sure you want to delete this post?\n\n"${title}"\n\nThis action cannot be undone and will also delete all comments on this post.`);
+      
+      if (confirmed) {
+        deletePost(newsId);
+      }
+    }
+
+    // Delete post function
+    async function deletePost(newsId) {
+      console.log('=== Delete Post Request ===');
+      console.log('News ID:', newsId);
+      
+      try {
+        const response = await fetch(`/news/${encodeURIComponent(newsId)}/delete`, {
+          method: 'DELETE',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        console.log('Delete response status:', response.status);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Delete error response:', errorText);
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('Delete result:', result);
+        
+        if (result.success) {
+          showNotification('Post deleted successfully!', 'success');
+          
+          // Reload page to reflect changes
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          throw new Error(result.message || 'Failed to delete post');
+        }
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        showNotification(`Failed to delete post. Error: ${error.message}`, 'error');
+      }
+    }
+  </script>
+</body>
 </html>

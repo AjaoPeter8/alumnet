@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Debug Tool</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { margin: 5px; padding: 8px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Admin Debug Tool</h1>
+    
+    <div class="test-section">
+        <h3>1. Test Authentication</h3>
+        <button onclick="testAuth()">Check Admin Access</button>
+        <div id="auth-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Routes</h3>
+        <button onclick="testRoutes()">Test All Admin Routes</button>
+        <div id="routes-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test Delete Functions</h3>
+        <button onclick="testDeletePost()">Test Delete Post</button>
+        <button onclick="testDeleteUser()">Test Delete User</button>
+        <button onclick="testDeleteComment()">Test Delete Comment</button>
+        <div id="delete-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. View Data</h3>
+        <button onclick="viewPosts()">View Posts Data</button>
+        <button onclick="viewUsers()">View Users Data</button>
+        <div id="data-result"></div>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            console.log(message);
+            const resultDiv = document.getElementById(type + '-result') || document.getElementById('delete-result');
+            if (resultDiv) {
+                resultDiv.innerHTML += `<div class="result ${type}">${message}</div>`;
+            }
+        }
+
+        async function testAuth() {
+            const resultDiv = document.getElementById('auth-result');
+            resultDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/admin/test');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    log('✅ Authentication successful', 'success');
+                    log(`Response: ${JSON.stringify(data)}`, 'info');
+                } else {
+                    log(`❌ Authentication failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testRoutes() {
+            const resultDiv = document.getElementById('routes-result');
+            resultDiv.innerHTML = '';
+            
+            const routes = [
+                { method: 'GET', url: '/admin' },
+                { method: 'GET', url: '/admin/test' }
+            ];
+
+            for (const route of routes) {
+                try {
+                    const response = await fetch(route.url, { method: route.method });
+                    
+                    if (response.ok) {
+                        log(`✅ ${route.method} ${route.url} - OK (${response.status})`, 'success');
+                    } else {
+                        log(`❌ ${route.method} ${route.url} - Failed (${response.status})`, 'error');
+                    }
+                } catch (error) {
+                    log(`❌ ${route.method} ${route.url} - Error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testDeletePost() {
+            const resultDiv = document.getElementById('delete-result');
+            
+            // Test with different ID formats
+            const testIds = ['1', 'NEWS/1753807097051', '1753807097051'];
+            
+            for (const testId of testIds) {
+                try {
+                    log(`Testing delete post with ID: ${testId}`, 'info');
+                    
+                    const response = await fetch(`/admin/posts/delete/${encodeURIComponent(testId)}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        log(`✅ Delete post ${testId}: ${data.message}`, 'success');
+                    } else {
+                        log(`❌ Delete post ${testId} failed: ${data.message} (${response.status})`, 'error');
+                    }
+                } catch (error) {
+                    log(`❌ Delete post ${testId} error: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testDeleteUser() {
+            // Test with a non-existent user ID to avoid accidentally deleting real users
+            const testId = '99999';
+            
+            try {
+                log(`Testing delete user with ID: ${testId}`, 'info');
+                
+                const response = await fetch(`/admin/users/delete/${testId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.status === 404) {
+                    log(`✅ Delete user route working (user not found as expected)`, 'success');
+                } else if (response.ok) {
+                    log(`✅ Delete user ${testId}: ${data.message}`, 'success');
+                } else {
+                    log(`❌ Delete user ${testId} failed: ${data.message} (${response.status})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Delete user ${testId} error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testDeleteComment() {
+            // Test with a non-existent comment ID
+            const testId = '99999';
+            
+            try {
+                log(`Testing delete comment with ID: ${testId}`, 'info');
+                
+                const response = await fetch(`/admin/comments/delete/${testId}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.status === 404) {
+                    log(`✅ Delete comment route working (comment not found as expected)`, 'success');
+                } else if (response.ok) {
+                    log(`✅ Delete comment ${testId}: ${data.message}`, 'success');
+                } else {
+                    log(`❌ Delete comment ${testId} failed: ${data.message} (${response.status})`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Delete comment ${testId} error: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewPosts() {
+            const resultDiv = document.getElementById('data-result');
+            
+            try {
+                const response = await fetch('/admin');
+                const text = await response.text();
+                
+                // Extract post data from the admin page
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                
+                log('Posts data structure analysis:', 'info');
+                log('Check the browser console for detailed output', 'info');
+                
+                // Look for post IDs in the page
+                const deleteButtons = doc.querySelectorAll('button[onclick*="deletePost"]');
+                deleteButtons.forEach((button, index) => {
+                    const onclick = button.getAttribute('onclick');
+                    const match = onclick.match(/deletePost\('([^']+)'\)/);
+                    if (match) {
+                        log(`Post ${index + 1} ID: ${match[1]}`, 'info');
+                    }
+                });
+                
+            } catch (error) {
+                log(`❌ Error viewing posts: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewUsers() {
+            const resultDiv = document.getElementById('data-result');
+            
+            try {
+                const response = await fetch('/admin');
+                const text = await response.text();
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                
+                log('Users data structure analysis:', 'info');
+                
+                // Look for user IDs in the page
+                const deleteButtons = doc.querySelectorAll('button[onclick*="deleteUser"]');
+                deleteButtons.forEach((button, index) => {
+                    const onclick = button.getAttribute('onclick');
+                    const match = onclick.match(/deleteUser\('([^']+)'\)/);
+                    if (match) {
+                        log(`User ${index + 1} ID: ${match[1]}`, 'info');
+                    }
+                });
+                
+            } catch (error) {
+                log(`❌ Error viewing users: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
