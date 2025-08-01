@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentorship - AlumNet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mentor-card:hover { transform: translateY(-2px); }
+        .mentor-card { transition: all 0.3s ease; }
+        .expertise-tag { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .status-badge { animation: pulse 2s infinite; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <%- include('partials/header') %>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">Mentorship Program</h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Connect with experienced alumni mentors or share your expertise by becoming a mentor yourself.
+                Build meaningful professional relationships that last a lifetime.
+            </p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+                <div class="text-3xl font-bold text-blue-600 mb-2"><%= stats.total_mentors || 0 %></div>
+                <div class="text-gray-600">Active Mentors</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+                <div class="text-3xl font-bold text-green-600 mb-2"><%= stats.active_mentorships || 0 %></div>
+                <div class="text-gray-600">Active Mentorships</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+                <div class="text-3xl font-bold text-purple-600 mb-2"><%= stats.completed_mentorships || 0 %></div>
+                <div class="text-gray-600">Completed</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+                <div class="text-3xl font-bold text-orange-600 mb-2"><%= stats.pending_requests || 0 %></div>
+                <div class="text-gray-600">Pending Requests</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <% if (!isMentor) { %>
+                <button onclick="openBecomeMentorModal()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Become a Mentor
+                </button>
+            <% } else { %>
+                <button onclick="openMentorDashboard()" class="bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Mentor Dashboard
+                </button>
+            <% } %>
+            
+            <button onclick="openFindMentorModal()" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                Find a Mentor
+            </button>
+
+            <button onclick="openMyMentorshipsModal()" class="bg-gradient-to-r from-orange-600 to-red-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                My Mentorships
+            </button>
+        </div>
+
+        <!-- Available Mentors Section -->
+        <div class="mb-12">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-900">Available Mentors</h2>
+                <div class="flex gap-4">
+                    <select id="expertiseFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Expertise Areas</option>
+                        <% expertiseAreas.forEach(area => { %>
+                            <option value="<%= area.area_name %>"><%= area.area_name %></option>
+                        <% }); %>
+                    </select>
+                    <select id="experienceFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">All Experience Levels</option>
+                        <option value="1-3">1-3 years</option>
+                        <option value="4-7">4-7 years</option>
+                        <option value="8-15">8-15 years</option>
+                        <option value="15+">15+ years</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="mentorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <% mentors.forEach(mentor => { %>
+                    <div class="mentor-card bg-white rounded-xl shadow-sm hover:shadow-lg p-6 border border-gray-100" 
+                         data-expertise="<%= mentor.expertise_areas %>" 
+                         data-experience="<%= mentor.years_of_experience %>">
+                        <!-- Mentor Header -->
+                        <div class="flex items-center mb-4">
+                            <img src="<%= mentor.profile_picture_url || '/images/default-avatar.jpg' %>" 
+                                 alt="<%= mentor.full_name %>" 
+                                 class="w-16 h-16 rounded-full object-cover mr-4">
+                            <div class="flex-1">
+                                <h3 class="text-xl font-semibold text-gray-900"><%= mentor.full_name %></h3>
+                                <p class="text-gray-600"><%= mentor.job_title %></p>
+                                <p class="text-sm text-gray-500"><%= mentor.company %></p>
+                            </div>
+                            <div class="text-right">
+                                <div class="status-badge inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    <%= mentor.availability_status %>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    <%= mentor.years_of_experience %> years exp.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bio -->
+                        <p class="text-gray-700 mb-4 line-clamp-3"><%= mentor.bio %></p>
+
+                        <!-- Expertise Areas -->
+                        <div class="mb-4">
+                            <div class="flex flex-wrap gap-2">
+                                <% try { 
+                                    const expertiseList = JSON.parse(mentor.expertise_areas || '[]');
+                                    expertiseList.slice(0, 3).forEach(area => { %>
+                                        <span class="expertise-tag text-white px-3 py-1 rounded-full text-sm font-medium">
+                                            <%= area %>
+                                        </span>
+                                    <% }); 
+                                    if (expertiseList.length > 3) { %>
+                                        <span class="text-gray-500 text-sm">+<%= expertiseList.length - 3 %> more</span>
+                                    <% }
+                                } catch(e) { %>
+                                    <span class="text-gray-500 text-sm">Expertise areas not specified</span>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <!-- Mentoring Info -->
+                        <div class="flex justify-between items-center text-sm text-gray-600 mb-4">
+                            <span>
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <%= mentor.current_mentees %>/<%= mentor.max_mentees %> mentees
+                            </span>
+                            <span>
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                </svg>
+                                <%= mentor.preferred_communication %>
+                            </span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button onclick="viewMentorProfile('<%= mentor.mentor_id %>')" 
+                                    class="flex-1 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                                View Profile
+                            </button>
+                            <% if (mentor.availability_status === 'available' && mentor.current_mentees < mentor.max_mentees) { %>
+                                <button onclick="requestMentorship('<%= mentor.mentor_id %>')" 
+                                        class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:shadow-md transition-all">
+                                    Request Mentorship
+                                </button>
+                            <% } else { %>
+                                <button disabled class="flex-1 bg-gray-300 text-gray-500 px-4 py-2 rounded-lg font-medium cursor-not-allowed">
+                                    Not Available
+                                </button>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <% if (mentors.length === 0) { %>
+                <div class="text-center py-12">
+                    <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Mentors Available</h3>
+                    <p class="text-gray-600 mb-6">Be the first to join our mentorship program!</p>
+                    <button onclick="openBecomeMentorModal()" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        Become a Mentor
+                    </button>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Include modals -->
+    <%- include('partials/mentorship-modals') %>
+
+    <!-- Include scripts -->
+    <script src="/js/mentorship.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+</body>
+</html>

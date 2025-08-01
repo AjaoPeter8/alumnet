@@ -18,12 +18,18 @@
         <!-- Desktop Navigation -->
         <div class="hidden md:flex md:items-center md:space-x-8">
           <a href="/" class="text-blue-600 dark:text-blue-400 font-medium text-sm hover:text-blue-700 dark:hover:text-blue-300 transition-colors duration-200">Home</a>
-          <a href="chat" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Chat</a>
-          <a href="news" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">News</a>
-          <a href="jobs" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Jobs/Internships</a>
-          <a href="achievements" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Achievements</a>
+          <a href="/chat" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Chat</a>
+          <a href="/news" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">News</a>
+          <a href="/mentorship" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center space-x-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <span>Mentorship</span>
+          </a>
+          <a href="/jobs" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Jobs/Internships</a>
+          <a href="/achievements" class="text-gray-700 dark:text-gray-300 font-medium text-sm hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">Achievements</a>
           <% if (user && user.role === 'admin') { %>
-            <a href="admin" class="text-purple-600 dark:text-purple-400 font-medium text-sm hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-200 flex items-center space-x-1">
+            <a href="/admin" class="text-purple-600 dark:text-purple-400 font-medium text-sm hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-200 flex items-center space-x-1">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -51,7 +57,7 @@
 
           <!-- Profile Section -->
           <div class="flex items-center">
-            <a href="profile" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors duration-200 group">
+            <a href="/profile" class="flex items-center space-x-3 text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 transition-colors duration-200 group">
               <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm group-hover:shadow-lg transition-shadow duration-200">
                 <%= (user && user.full_name) ? user.full_name.charAt(0).toUpperCase() : (user && user.username) ? user.username.charAt(0).toUpperCase() : 'U' %>
               </div>
@@ -94,12 +100,18 @@
           
           <!-- Mobile Navigation Links -->
           <a href="/" class="block px-3 py-2 text-base font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-md">Home</a>
-          <a href="chat" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Chat</a>
-          <a href="news" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">News</a>
-          <a href="jobs" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Jobs/Internships</a>
-          <a href="achievements" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Achievements</a>
+          <a href="/chat" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Chat</a>
+          <a href="/news" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">News</a>
+          <a href="/mentorship" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <span>Mentorship</span>
+          </a>
+          <a href="/jobs" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Jobs/Internships</a>
+          <a href="/achievements" class="block px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors duration-200">Achievements</a>
           <% if (user && user.role === 'admin') { %>
-            <a href="admin" class="block px-3 py-2 text-base font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors duration-200 flex items-center space-x-2">
+            <a href="/admin" class="block px-3 py-2 text-base font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-md transition-colors duration-200 flex items-center space-x-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>

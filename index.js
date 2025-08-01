@@ -857,11 +857,6 @@ app.delete('/admin/users/delete/:userId', authenticateToken, isAdmin, async (req
   }
 });
 
-// Test route to verify admin routes are working
-app.get('/admin/test', (req, res) => {
-  res.json({ message: 'Admin routes are working!', timestamp: new Date() });
-});
-
 // Delete post (admin only) - Fixed version
 app.delete('/admin/posts/delete/:postId', authenticateToken, isAdmin, async (req, res) => {
   let { postId } = req.params;
@@ -1262,6 +1257,847 @@ app.delete('/admin/comments/delete/:commentId', authenticateToken, isAdmin, asyn
 app.get('/admin/test', authenticateToken, isAdmin, (req, res) => {
   res.json({ success: true, message: 'Admin access confirmed', user: req.user });
 });
+
+// ===== MENTORSHIP SYSTEM ROUTES =====
+
+
+
+// Become a mentor API
+app.post('/api/mentorship/become-mentor', authenticateToken, async (req, res) => {
+  const { bio, years_of_experience, expertise_areas, max_mentees, preferred_communication, mentoring_style } = req.body;
+  const userId = req.user.user_id;
+
+  try {
+    // Check if user is already a mentor
+    const [existingMentor] = await pool.query('SELECT * FROM mentors WHERE user_id = ?', [userId]);
+    
+    if (existingMentor.length > 0) {
+      return res.status(400).json({ success: false, message: 'You are already registered as a mentor' });
+    }
+
+    // Insert new mentor
+    const [result] = await pool.query(`
+      INSERT INTO mentors (user_id, bio, expertise_areas, years_of_experience, max_mentees, preferred_communication, mentoring_style)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `, [userId, bio, expertise_areas, years_of_experience, max_mentees, preferred_communication, mentoring_style]);
+
+    // Log activity
+    await pool.query(
+      'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+      [userId, 'mentorship', 'Registered as a mentor']
+    );
+
+    res.json({ success: true, message: 'Successfully registered as a mentor!', mentor_id: result.insertId });
+  } catch (err) {
+    console.error('Become mentor error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Save mentorship preferences
+app.post('/api/mentorship/save-preferences', authenticateToken, async (req, res) => {
+  const { preferred_skills, career_stage, preferred_mentor_experience, preferred_communication, preferred_meeting_frequency, specific_goals } = req.body;
+  const userId = req.user.user_id;
+
+  try {
+    // Check if preferences already exist
+    const [existing] = await pool.query('SELECT * FROM mentorship_matching_preferences WHERE user_id = ?', [userId]);
+    
+    if (existing.length > 0) {
+      // Update existing preferences
+      await pool.query(`
+        UPDATE mentorship_matching_preferences 
+        SET preferred_skills = ?, career_stage = ?, preferred_mentor_experience = ?, 
+            preferred_communication = ?, preferred_meeting_frequency = ?, specific_goals = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = ?
+      `, [preferred_skills, career_stage, preferred_mentor_experience, preferred_communication, preferred_meeting_frequency, specific_goals, userId]);
+    } else {
+      // Insert new preferences
+      await pool.query(`
+        INSERT INTO mentorship_matching_preferences 
+        (user_id, preferred_skills, career_stage, preferred_mentor_experience, preferred_communication, preferred_meeting_frequency, specific_goals)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `, [userId, preferred_skills, career_stage, preferred_mentor_experience, preferred_communication, preferred_meeting_frequency, specific_goals]);
+    }
+
+    res.json({ success: true, message: 'Preferences saved successfully!' });
+  } catch (err) {
+    console.error('Save preferences error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Request mentorship
+app.post('/api/mentorship/request', authenticateToken, async (req, res) => {
+  const { mentor_id, request_message, goals, preferred_duration } = req.body;
+  const menteeId = req.user.user_id;
+
+  try {
+    // Check if mentor exists and is available
+    const [mentor] = await pool.query('SELECT * FROM mentors WHERE mentor_id = ? AND is_active = TRUE', [mentor_id]);
+    
+    if (mentor.length === 0) {
+      return res.status(404).json({ success: false, message: 'Mentor not found or not available' });
+    }
+
+    // Check if user already has a pending or active request with this mentor
+    const [existingRequest] = await pool.query(`
+      SELECT * FROM mentorship_requests 
+      WHERE mentee_id = ? AND mentor_id = ? AND status IN ('pending', 'accepted')
+    `, [menteeId, mentor_id]);
+    
+    if (existingRequest.length > 0) {
+      return res.status(400).json({ success: false, message: 'You already have a pending or active request with this mentor' });
+    }
+
+    // Check if mentor has capacity
+    if (mentor[0].current_mentees >= mentor[0].max_mentees) {
+      return res.status(400).json({ success: false, message: 'This mentor has reached their maximum capacity' });
+    }
+
+    // Insert mentorship request
+    const [result] = await pool.query(`
+      INSERT INTO mentorship_requests (mentee_id, mentor_id, request_message, goals, preferred_duration)
+      VALUES (?, ?, ?, ?, ?)
+    `, [menteeId, mentor_id, request_message, goals, preferred_duration]);
+
+    // Log activity
+    await pool.query(
+      'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+      [menteeId, 'mentorship', `Requested mentorship from mentor ID: ${mentor_id}`]
+    );
+
+    res.json({ success: true, message: 'Mentorship request sent successfully!', request_id: result.insertId });
+  } catch (err) {
+    console.error('Request mentorship error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Get user's mentorships (as mentor and mentee)
+app.get('/api/mentorship/my-mentorships', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    // Get mentorships where user is a mentor
+    const [asMentor] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username as mentee_username,
+        u.full_name as mentee_name,
+        u.profile_picture_url as mentee_avatar,
+        mr.request_message,
+        mr.created_at as request_date
+      FROM active_mentorships am
+      JOIN mentors m ON am.mentor_id = m.mentor_id
+      JOIN users u ON am.mentee_id = u.user_id
+      LEFT JOIN mentorship_requests mr ON am.request_id = mr.request_id
+      WHERE m.user_id = ?
+      ORDER BY am.created_at DESC
+    `, [userId]);
+
+    // Get mentorships where user is a mentee
+    const [asMentee] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username as mentor_username,
+        u.full_name as mentor_name,
+        u.profile_picture_url as mentor_avatar,
+        m.bio as mentor_bio,
+        mr.request_message,
+        mr.created_at as request_date
+      FROM active_mentorships am
+      JOIN mentors m ON am.mentor_id = m.mentor_id
+      JOIN users u ON m.user_id = u.user_id
+      LEFT JOIN mentorship_requests mr ON am.request_id = mr.request_id
+      WHERE am.mentee_id = ?
+      ORDER BY am.created_at DESC
+    `, [userId]);
+
+    // Get pending requests (sent and received)
+    const [sentRequests] = await pool.query(`
+      SELECT 
+        mr.*,
+        u.username as mentor_username,
+        u.full_name as mentor_name,
+        m.bio as mentor_bio
+      FROM mentorship_requests mr
+      JOIN mentors m ON mr.mentor_id = m.mentor_id
+      JOIN users u ON m.user_id = u.user_id
+      WHERE mr.mentee_id = ? AND mr.status = 'pending'
+      ORDER BY mr.created_at DESC
+    `, [userId]);
+
+    const [receivedRequests] = await pool.query(`
+      SELECT 
+        mr.*,
+        u.username as mentee_username,
+        u.full_name as mentee_name,
+        u.profile_picture_url as mentee_avatar
+      FROM mentorship_requests mr
+      JOIN users u ON mr.mentee_id = u.user_id
+      JOIN mentors m ON mr.mentor_id = m.mentor_id
+      WHERE m.user_id = ? AND mr.status = 'pending'
+      ORDER BY mr.created_at DESC
+    `, [userId]);
+
+    res.json({
+      success: true,
+      data: {
+        asMentor,
+        asMentee,
+        sentRequests,
+        receivedRequests
+      }
+    });
+  } catch (err) {
+    console.error('Get mentorships error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Accept/Decline mentorship request (for mentors)
+app.post('/api/mentorship/respond-request', authenticateToken, async (req, res) => {
+  const { request_id, action } = req.body; // action: 'accept' or 'decline'
+  const userId = req.user.user_id;
+
+  try {
+    // Verify the request belongs to this mentor
+    const [request] = await pool.query(`
+      SELECT mr.*, m.user_id as mentor_user_id, m.current_mentees, m.max_mentees
+      FROM mentorship_requests mr
+      JOIN mentors m ON mr.mentor_id = m.mentor_id
+      WHERE mr.request_id = ? AND m.user_id = ? AND mr.status = 'pending'
+    `, [request_id, userId]);
+
+    if (request.length === 0) {
+      return res.status(404).json({ success: false, message: 'Request not found or not authorized' });
+    }
+
+    const requestData = request[0];
+
+    if (action === 'accept') {
+      // Check mentor capacity
+      if (requestData.current_mentees >= requestData.max_mentees) {
+        return res.status(400).json({ success: false, message: 'You have reached your maximum mentee capacity' });
+      }
+
+      // Start transaction
+      await pool.query('START TRANSACTION');
+
+      try {
+        // Update request status
+        await pool.query('UPDATE mentorship_requests SET status = "accepted", updated_at = CURRENT_TIMESTAMP WHERE request_id = ?', [request_id]);
+
+        // Create active mentorship
+        const startDate = new Date().toISOString().split('T')[0];
+        let expectedEndDate = null;
+        
+        if (requestData.preferred_duration !== 'ongoing') {
+          const durationMonths = {
+            '1_month': 1,
+            '3_months': 3,
+            '6_months': 6,
+            '1_year': 12
+          };
+          
+          const endDate = new Date();
+          endDate.setMonth(endDate.getMonth() + durationMonths[requestData.preferred_duration]);
+          expectedEndDate = endDate.toISOString().split('T')[0];
+        }
+
+        await pool.query(`
+          INSERT INTO active_mentorships (mentor_id, mentee_id, request_id, start_date, expected_end_date, goals)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `, [requestData.mentor_id, requestData.mentee_id, request_id, startDate, expectedEndDate, requestData.goals]);
+
+        // Update mentor's current mentee count
+        await pool.query('UPDATE mentors SET current_mentees = current_mentees + 1 WHERE mentor_id = ?', [requestData.mentor_id]);
+
+        // Log activities
+        await pool.query(
+          'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+          [userId, 'mentorship', `Accepted mentorship request from user ID: ${requestData.mentee_id}`]
+        );
+        
+        await pool.query(
+          'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+          [requestData.mentee_id, 'mentorship', `Mentorship request accepted by mentor ID: ${requestData.mentor_id}`]
+        );
+
+        await pool.query('COMMIT');
+        res.json({ success: true, message: 'Mentorship request accepted successfully!' });
+      } catch (error) {
+        await pool.query('ROLLBACK');
+        throw error;
+      }
+    } else if (action === 'decline') {
+      // Update request status
+      await pool.query('UPDATE mentorship_requests SET status = "declined", updated_at = CURRENT_TIMESTAMP WHERE request_id = ?', [request_id]);
+
+      // Log activity
+      await pool.query(
+        'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+        [userId, 'mentorship', `Declined mentorship request from user ID: ${requestData.mentee_id}`]
+      );
+
+      res.json({ success: true, message: 'Mentorship request declined.' });
+    } else {
+      res.status(400).json({ success: false, message: 'Invalid action' });
+    }
+  } catch (err) {
+    console.error('Respond to request error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// My Mentorships page (for mentees) - MUST come before parameterized routes
+app.get('/mentorship/my-mentorships', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    // Get user's mentorships as mentee
+    const [asMentee] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username as mentor_username,
+        u.full_name as mentor_name,
+        u.profile_picture_url as mentor_avatar,
+        u.job_title as mentor_job_title,
+        u.company as mentor_company,
+        m.bio as mentor_bio,
+        m.expertise_areas,
+        mr.request_message,
+        mr.created_at as request_date
+      FROM active_mentorships am
+      JOIN mentors m ON am.mentor_id = m.mentor_id
+      JOIN users u ON m.user_id = u.user_id
+      LEFT JOIN mentorship_requests mr ON am.request_id = mr.request_id
+      WHERE am.mentee_id = ?
+      ORDER BY am.created_at DESC
+    `, [userId]);
+
+    // Get pending requests sent by user
+    const [sentRequests] = await pool.query(`
+      SELECT 
+        mr.*,
+        u.username as mentor_username,
+        u.full_name as mentor_name,
+        u.profile_picture_url as mentor_avatar,
+        u.job_title as mentor_job_title,
+        u.company as mentor_company,
+        m.bio as mentor_bio
+      FROM mentorship_requests mr
+      JOIN mentors m ON mr.mentor_id = m.mentor_id
+      JOIN users u ON m.user_id = u.user_id
+      WHERE mr.mentee_id = ? AND mr.status = 'pending'
+      ORDER BY mr.created_at DESC
+    `, [userId]);
+
+    // Get user's mentorship statistics
+    const [stats] = await pool.query(`
+      SELECT 
+        COUNT(DISTINCT mr.request_id) as total_requests_sent,
+        COUNT(DISTINCT CASE WHEN mr.status = 'pending' THEN mr.request_id END) as pending_requests,
+        COUNT(DISTINCT CASE WHEN mr.status = 'accepted' THEN mr.request_id END) as accepted_requests,
+        COUNT(DISTINCT am.mentorship_id) as active_mentorships,
+        COUNT(DISTINCT CASE WHEN am.status = 'completed' THEN am.mentorship_id END) as completed_mentorships
+      FROM mentorship_requests mr
+      LEFT JOIN active_mentorships am ON mr.request_id = am.request_id
+      WHERE mr.mentee_id = ?
+    `, [userId]);
+
+    res.render('my-mentorships', {
+      user: req.user,
+      asMentee,
+      sentRequests,
+      stats: stats[0] || {
+        total_requests_sent: 0,
+        pending_requests: 0,
+        accepted_requests: 0,
+        active_mentorships: 0,
+        completed_mentorships: 0
+      }
+    });
+  } catch (err) {
+    console.error('My mentorships error:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Main mentorship page and sub-pages
+app.get('/mentorship/:section?', authenticateToken, async (req, res) => {
+  const section = req.params.section;
+
+  try {
+    // If a specific section is requested, redirect to the appropriate route
+    if (section === 'dashboard') {
+      return res.redirect('/mentorship/dashboard');
+    } else if (section && section !== 'mentorship') {
+      // If an invalid section is provided, redirect to the main mentorship page
+      return res.redirect('/mentorship');
+    }
+
+    // Get mentorship statistics
+    const [stats] = await pool.query(`
+      SELECT 
+        COUNT(DISTINCT m.mentor_id) as total_mentors,
+        COUNT(DISTINCT CASE WHEN m.is_active = TRUE THEN m.mentor_id END) as active_mentors,
+        COUNT(DISTINCT mr.request_id) as total_requests,
+        COUNT(DISTINCT CASE WHEN mr.status = 'accepted' THEN mr.request_id END) as accepted_requests,
+        COUNT(DISTINCT am.mentorship_id) as active_mentorships,
+        COUNT(DISTINCT CASE WHEN am.status = 'completed' THEN am.mentorship_id END) as completed_mentorships
+      FROM mentors m
+      LEFT JOIN mentorship_requests mr ON m.mentor_id = mr.mentor_id
+      LEFT JOIN active_mentorships am ON m.mentor_id = am.mentor_id
+    `);
+
+    // Get all active mentors with their expertise
+    const [mentors] = await pool.query(`
+      SELECT 
+        m.*,
+        u.username,
+        u.full_name,
+        u.profile_picture_url,
+        u.job_title,
+        u.company,
+        u.location,
+        COUNT(DISTINCT am.mentorship_id) as total_mentorships,
+        COUNT(DISTINCT CASE WHEN am.status = 'completed' THEN am.mentorship_id END) as completed_mentorships,
+        AVG(am.mentor_rating) as average_rating
+      FROM mentors m
+      JOIN users u ON m.user_id = u.user_id
+      LEFT JOIN active_mentorships am ON m.mentor_id = am.mentor_id
+      WHERE m.is_active = TRUE
+      GROUP BY m.mentor_id
+      ORDER BY completed_mentorships DESC, average_rating DESC
+    `);
+
+    // Get expertise areas for filtering
+    const [expertiseAreas] = await pool.query(`
+      SELECT DISTINCT expertise_areas
+      FROM mentors 
+      WHERE is_active = TRUE AND expertise_areas IS NOT NULL
+    `);
+
+    // Process expertise areas (they might be comma-separated)
+    const allExpertise = new Set();
+    expertiseAreas.forEach(row => {
+      if (row.expertise_areas) {
+        row.expertise_areas.split(',').forEach(area => {
+          allExpertise.add(area.trim());
+        });
+      }
+    });
+
+    // Check if current user is a mentor
+    const [userMentorCheck] = await pool.query(
+      'SELECT mentor_id FROM mentors WHERE user_id = ? AND is_active = TRUE',
+      [req.user.user_id]
+    );
+
+    res.render('mentorship', {
+      user: req.user,
+      stats: stats[0] || {
+        total_mentors: 0,
+        active_mentors: 0,
+        total_requests: 0,
+        accepted_requests: 0,
+        active_mentorships: 0,
+        completed_mentorships: 0
+      },
+      mentors,
+      expertiseAreas: Array.from(allExpertise).sort().map(area => ({ area_name: area })),
+      isMentor: userMentorCheck.length > 0
+    });
+  } catch (err) {
+    console.error('Mentorship page error:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// ===== MENTORSHIP API ROUTES =====
+
+// Become a mentor
+app.post('/api/mentorship/become-mentor', authenticateToken, async (req, res) => {
+  const { bio, expertise_areas, experience_level, availability, max_mentees, communication_preferences } = req.body;
+  const userId = req.user.user_id;
+
+  try {
+    // Check if user is already a mentor
+    const [existingMentor] = await pool.query('SELECT * FROM mentors WHERE user_id = ?', [userId]);
+    
+    if (existingMentor.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'You are already registered as a mentor'
+      });
+    }
+
+    // Insert new mentor
+    const [result] = await pool.query(`
+      INSERT INTO mentors (
+        user_id, bio, expertise_areas, experience_level, 
+        availability, max_mentees, communication_preferences, is_active
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, TRUE)
+    `, [userId, bio, expertise_areas, experience_level, availability, max_mentees || 3, communication_preferences]);
+
+    // Log activity
+    await pool.query(
+      'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+      [userId, 'mentor_registration', 'Registered as a mentor']
+    );
+
+    res.json({ success: true, message: 'Successfully registered as a mentor!' });
+  } catch (err) {
+    console.error('Become mentor error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Save mentorship preferences
+app.post('/api/mentorship/save-preferences', authenticateToken, async (req, res) => {
+  const { skills, experience_level, communication_style, goals } = req.body;
+  const userId = req.user.user_id;
+
+  try {
+    // Check if preferences already exist
+    const [existing] = await pool.query(
+      'SELECT * FROM mentorship_matching_preferences WHERE user_id = ?',
+      [userId]
+    );
+
+    if (existing.length > 0) {
+      // Update existing preferences
+      await pool.query(`
+        UPDATE mentorship_matching_preferences 
+        SET preferred_skills = ?, experience_level = ?, communication_style = ?, goals = ?, updated_at = NOW()
+        WHERE user_id = ?
+      `, [skills, experience_level, communication_style, goals, userId]);
+    } else {
+      // Insert new preferences
+      await pool.query(`
+        INSERT INTO mentorship_matching_preferences 
+        (user_id, preferred_skills, experience_level, communication_style, goals)
+        VALUES (?, ?, ?, ?, ?)
+      `, [userId, skills, experience_level, communication_style, goals]);
+    }
+
+    res.json({ success: true, message: 'Preferences saved successfully!' });
+  } catch (err) {
+    console.error('Save preferences error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Request mentorship
+app.post('/api/mentorship/request', authenticateToken, async (req, res) => {
+  const { mentor_id, message, goals, duration } = req.body;
+  const menteeId = req.user.user_id;
+
+  try {
+    // Check if mentor exists and is active
+    const [mentor] = await pool.query(
+      'SELECT * FROM mentors WHERE mentor_id = ? AND is_active = TRUE',
+      [mentor_id]
+    );
+
+    if (mentor.length === 0) {
+      return res.status(404).json({ success: false, message: 'Mentor not found or inactive' });
+    }
+
+    // Check if user already has a pending/active request with this mentor
+    const [existingRequest] = await pool.query(`
+      SELECT * FROM mentorship_requests 
+      WHERE mentor_id = ? AND mentee_id = ? AND status IN ('pending', 'accepted')
+    `, [mentor_id, menteeId]);
+
+    if (existingRequest.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'You already have a pending or active request with this mentor'
+      });
+    }
+
+    // Check mentor's capacity
+    const [currentMentees] = await pool.query(
+      'SELECT COUNT(*) as count FROM active_mentorships WHERE mentor_id = ? AND status = "active"',
+      [mentor_id]
+    );
+
+    if (currentMentees[0].count >= mentor[0].max_mentees) {
+      return res.status(400).json({
+        success: false,
+        message: 'This mentor has reached their maximum capacity'
+      });
+    }
+
+    // Create mentorship request
+    await pool.query(`
+      INSERT INTO mentorship_requests 
+      (mentor_id, mentee_id, request_message, goals, duration, status)
+      VALUES (?, ?, ?, ?, ?, 'pending')
+    `, [mentor_id, menteeId, message, goals, duration]);
+
+    // Log activity
+    await pool.query(
+      'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+      [menteeId, 'mentorship_request', `Requested mentorship from ${mentor[0].user_id}`]
+    );
+
+    res.json({ success: true, message: 'Mentorship request sent successfully!' });
+  } catch (err) {
+    console.error('Request mentorship error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Get user's mentorships
+app.get('/api/mentorship/my-mentorships', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    // Get mentorships as mentee
+    const [asMentee] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username as mentor_username,
+        u.full_name as mentor_name,
+        m.bio as mentor_bio
+      FROM active_mentorships am
+      JOIN mentors m ON am.mentor_id = m.mentor_id
+      JOIN users u ON m.user_id = u.user_id
+      WHERE am.mentee_id = ?
+      ORDER BY am.created_at DESC
+    `, [userId]);
+
+    // Get mentorships as mentor
+    const [asMentor] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username as mentee_username,
+        u.full_name as mentee_name
+      FROM active_mentorships am
+      JOIN users u ON am.mentee_id = u.user_id
+      JOIN mentors m ON am.mentor_id = m.mentor_id
+      WHERE m.user_id = ?
+      ORDER BY am.created_at DESC
+    `, [userId]);
+
+    res.json({ success: true, asMentee, asMentor });
+  } catch (err) {
+    console.error('Get mentorships error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Respond to mentorship request
+app.post('/api/mentorship/respond-request', authenticateToken, async (req, res) => {
+  const { request_id, action } = req.body; // action: 'accept' or 'decline'
+  const userId = req.user.user_id;
+
+  try {
+    // Get the request details
+    const [request] = await pool.query(`
+      SELECT mr.*, m.user_id as mentor_user_id
+      FROM mentorship_requests mr
+      JOIN mentors m ON mr.mentor_id = m.mentor_id
+      WHERE mr.request_id = ? AND m.user_id = ?
+    `, [request_id, userId]);
+
+    if (request.length === 0) {
+      return res.status(404).json({ success: false, message: 'Request not found or unauthorized' });
+    }
+
+    const requestData = request[0];
+
+    if (action === 'accept') {
+      // Update request status
+      await pool.query(
+        'UPDATE mentorship_requests SET status = "accepted", responded_at = NOW() WHERE request_id = ?',
+        [request_id]
+      );
+
+      // Create active mentorship
+      await pool.query(`
+        INSERT INTO active_mentorships 
+        (mentor_id, mentee_id, request_id, goals, duration, status, start_date)
+        VALUES (?, ?, ?, ?, ?, 'active', NOW())
+      `, [requestData.mentor_id, requestData.mentee_id, request_id, requestData.goals, requestData.duration]);
+
+      // Log activity
+      await pool.query(
+        'INSERT INTO user_activities (user_id, activity_type, description) VALUES (?, ?, ?)',
+        [userId, 'mentorship_accepted', `Accepted mentorship request from ${requestData.mentee_id}`]
+      );
+
+      res.json({ success: true, message: 'Mentorship request accepted!' });
+    } else if (action === 'decline') {
+      // Update request status
+      await pool.query(
+        'UPDATE mentorship_requests SET status = "declined", responded_at = NOW() WHERE request_id = ?',
+        [request_id]
+      );
+
+      res.json({ success: true, message: 'Mentorship request declined.' });
+    } else {
+      res.status(400).json({ success: false, message: 'Invalid action' });
+    }
+  } catch (err) {
+    console.error('Respond to request error:', err);
+    res.status(500).json({ success: false, message: 'Server error: ' + err.message });
+  }
+});
+
+// Get mentor profile
+app.get('/mentorship/mentor/:mentorId', authenticateToken, async (req, res) => {
+  const { mentorId } = req.params;
+
+  try {
+    const [mentor] = await pool.query(`
+      SELECT 
+        m.*,
+        u.username,
+        u.full_name,
+        u.email,
+        u.job_title,
+        u.company,
+        u.field_of_study,
+        u.graduation_year,
+        u.location,
+        u.profile_picture_url,
+        u.linkedin_url,
+        u.github_url,
+        u.about
+      FROM mentors m
+      JOIN users u ON m.user_id = u.user_id
+      WHERE m.mentor_id = ? AND m.is_active = TRUE
+    `, [mentorId]);
+
+    if (mentor.length === 0) {
+      return res.status(404).send('Mentor not found');
+    }
+
+    // Get mentor's completed mentorships count
+    const [mentorshipStats] = await pool.query(`
+      SELECT 
+        COUNT(*) as total_mentorships,
+        COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed_mentorships,
+        AVG(mentee_rating) as average_rating
+      FROM active_mentorships
+      WHERE mentor_id = ?
+    `, [mentorId]);
+
+    res.render('mentor-profile', {
+      user: req.user,
+      mentor: mentor[0],
+      stats: mentorshipStats[0] || { total_mentorships: 0, completed_mentorships: 0, average_rating: null }
+    });
+  } catch (err) {
+    console.error('Mentor profile error:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+// Mentor Dashboard
+app.get('/mentorship/dashboard', authenticateToken, async (req, res) => {
+  const userId = req.user.user_id;
+
+  try {
+    // Check if user is a mentor
+    const [mentorCheck] = await pool.query('SELECT * FROM mentors WHERE user_id = ? AND is_active = TRUE', [userId]);
+    
+    if (mentorCheck.length === 0) {
+      return res.redirect('/mentorship?error=not_mentor');
+    }
+
+    const mentor = mentorCheck[0];
+
+    // Get mentor's statistics
+    const [stats] = await pool.query(`
+      SELECT 
+        COUNT(DISTINCT mr.request_id) as total_requests,
+        COUNT(DISTINCT CASE WHEN mr.status = 'pending' THEN mr.request_id END) as pending_requests,
+        COUNT(DISTINCT CASE WHEN mr.status = 'accepted' THEN mr.request_id END) as accepted_requests,
+        COUNT(DISTINCT am.mentorship_id) as active_mentorships,
+        COUNT(DISTINCT CASE WHEN am.status = 'completed' THEN am.mentorship_id END) as completed_mentorships,
+        AVG(am.mentor_rating) as average_rating
+      FROM mentors m
+      LEFT JOIN mentorship_requests mr ON m.mentor_id = mr.mentor_id
+      LEFT JOIN active_mentorships am ON m.mentor_id = am.mentor_id
+      WHERE m.mentor_id = ?
+    `, [mentor.mentor_id]);
+
+    // Get pending requests
+    const [pendingRequests] = await pool.query(`
+      SELECT 
+        mr.*,
+        u.username,
+        u.full_name,
+        u.profile_picture_url,
+        u.email,
+        u.job_title,
+        u.company
+      FROM mentorship_requests mr
+      JOIN users u ON mr.mentee_id = u.user_id
+      WHERE mr.mentor_id = ? AND mr.status = 'pending'
+      ORDER BY mr.created_at DESC
+    `, [mentor.mentor_id]);
+
+    // Get active mentorships
+    const [activeMentorships] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username,
+        u.full_name,
+        u.profile_picture_url,
+        u.email,
+        u.job_title,
+        u.company,
+        mr.request_message
+      FROM active_mentorships am
+      JOIN users u ON am.mentee_id = u.user_id
+      LEFT JOIN mentorship_requests mr ON am.request_id = mr.request_id
+      WHERE am.mentor_id = ? AND am.status = 'active'
+      ORDER BY am.created_at DESC
+    `, [mentor.mentor_id]);
+
+    // Get recent completed mentorships
+    const [completedMentorships] = await pool.query(`
+      SELECT 
+        am.*,
+        u.username,
+        u.full_name,
+        u.profile_picture_url
+      FROM active_mentorships am
+      JOIN users u ON am.mentee_id = u.user_id
+      WHERE am.mentor_id = ? AND am.status = 'completed'
+      ORDER BY am.actual_end_date DESC
+      LIMIT 5
+    `, [mentor.mentor_id]);
+
+    res.render('mentor-dashboard', {
+      user: req.user,
+      mentor,
+      stats: stats[0] || {
+        total_requests: 0,
+        pending_requests: 0,
+        accepted_requests: 0,
+        active_mentorships: 0,
+        completed_mentorships: 0,
+        average_rating: null
+      },
+      pendingRequests,
+      activeMentorships,
+      completedMentorships
+    });
+  } catch (err) {
+    console.error('Mentor dashboard error:', err);
+    res.status(500).send('Server error');
+  }
+});
+
+
 
 server.listen(3000, () => {
   console.log('Server running on http://localhost:3000');

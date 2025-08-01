@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Mentorships - AlumNet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .card-hover:hover { transform: translateY(-2px); }
+        .card-hover { transition: all 0.3s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <%- include('partials/header') %>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">My Mentorships</h1>
+                    <p class="text-gray-600 mt-2">Track your mentorship journey and progress</p>
+                </div>
+                <a href="/mentorship" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Find More Mentors
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4 4m0 0l-4-4m4 4V3"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Requests Sent</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= stats.total_requests_sent %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= stats.pending_requests %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Accepted</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= stats.accepted_requests %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= stats.active_mentorships %></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-6 card-hover">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-indigo-100">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Completed</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= stats.completed_mentorships %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Active Mentorships -->
+            <div class="bg-white rounded-xl shadow-sm">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Active Mentorships</h3>
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            <%= asMentee.filter(m => m.status === 'active').length %> active
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <% const activeMentorships = asMentee.filter(m => m.status === 'active'); %>
+                    <% if (activeMentorships.length === 0) { %>
+                        <div class="text-center py-8">
+                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <p class="text-gray-500 mb-4">No active mentorships</p>
+                            <a href="/mentorship" class="text-blue-600 hover:text-blue-800 font-medium">Find a mentor to get started</a>
+                        </div>
+                    <% } else { %>
+                        <div class="space-y-4">
+                            <% activeMentorships.forEach(mentorship => { %>
+                                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="<%= mentorship.mentor_avatar || '/images/default-avatar.jpg' %>" 
+                                                 alt="<%= mentorship.mentor_name %>" 
+                                                 class="w-12 h-12 rounded-full object-cover">
+                                            <div>
+                                                <h4 class="font-semibold text-gray-900"><%= mentorship.mentor_name %></h4>
+                                                <p class="text-sm text-gray-600"><%= mentorship.mentor_job_title %> at <%= mentorship.mentor_company %></p>
+                                                <div class="flex items-center space-x-2 mt-1">
+                                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        Active
+                                                    </span>
+                                                    <span class="text-xs text-gray-500">
+                                                        Started <%= new Date(mentorship.start_date).toLocaleDateString() %>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <% if (mentorship.goals) { %>
+                                        <div class="mb-3 p-3 bg-blue-50 rounded-lg">
+                                            <p class="text-xs text-blue-600 font-medium mb-1">Your Goals:</p>
+                                            <p class="text-sm text-gray-700"><%= mentorship.goals %></p>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (mentorship.expertise_areas) { %>
+                                        <div class="mb-3">
+                                            <p class="text-xs text-gray-500 font-medium mb-2">Mentor's Expertise:</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <% try { 
+                                                    const expertiseList = JSON.parse(mentorship.expertise_areas || '[]');
+                                                    expertiseList.slice(0, 3).forEach(area => { %>
+                                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                            <%= area %>
+                                                        </span>
+                                                    <% }); 
+                                                    if (expertiseList.length > 3) { %>
+                                                        <span class="text-xs text-gray-500">+<%= expertiseList.length - 3 %> more</span>
+                                                    <% }
+                                                } catch(e) { %>
+                                                    <span class="text-xs text-gray-500">Not specified</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                    <% } %>
+
+                                    <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+                                        <div class="flex space-x-3">
+                                            <button onclick="viewMentorshipDetails('<%= mentorship.mentorship_id %>')" 
+                                                    class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                                View Details
+                                            </button>
+                                            <button onclick="scheduleMeeting('<%= mentorship.mentorship_id %>')" 
+                                                    class="text-green-600 hover:text-green-800 text-sm font-medium">
+                                                Schedule Meeting
+                                            </button>
+                                        </div>
+                                        <% if (mentorship.expected_end_date) { %>
+                                            <div class="text-xs text-gray-500">
+                                                Expected end: <%= new Date(mentorship.expected_end_date).toLocaleDateString() %>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Pending Requests -->
+            <div class="bg-white rounded-xl shadow-sm">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Pending Requests</h3>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                            <%= sentRequests.length %> pending
+                        </span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <% if (sentRequests.length === 0) { %>
+                        <div class="text-center py-8">
+                            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-8l-4 4m0 0l-4-4m4 4V3"></path>
+                            </svg>
+                            <p class="text-gray-500">No pending requests</p>
+                        </div>
+                    <% } else { %>
+                        <div class="space-y-4">
+                            <% sentRequests.forEach(request => { %>
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <div class="flex items-center space-x-3">
+                                            <img src="<%= request.mentor_avatar || '/images/default-avatar.jpg' %>" 
+                                                 alt="<%= request.mentor_name %>" 
+                                                 class="w-10 h-10 rounded-full object-cover">
+                                            <div>
+                                                <h4 class="font-medium text-gray-900"><%= request.mentor_name %></h4>
+                                                <p class="text-sm text-gray-600"><%= request.mentor_job_title %> at <%= request.mentor_company %></p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Pending
+                                            </span>
+                                            <div class="text-xs text-gray-500 mt-1">
+                                                Sent <%= new Date(request.created_at).toLocaleDateString() %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <% if (request.request_message) { %>
+                                        <div class="mb-2 p-3 bg-gray-50 rounded-lg">
+                                            <p class="text-xs text-gray-500 font-medium mb-1">Your Message:</p>
+                                            <p class="text-sm text-gray-700"><%= request.request_message %></p>
+                                        </div>
+                                    <% } %>
+
+                                    <% if (request.goals) { %>
+                                        <div class="mb-3">
+                                            <p class="text-xs text-gray-500 font-medium mb-1">Your Goals:</p>
+                                            <p class="text-sm text-gray-700"><%= request.goals %></p>
+                                        </div>
+                                    <% } %>
+
+                                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                                        <div class="text-xs text-gray-500">
+                                            Duration: <%= request.preferred_duration.replace('_', ' ') %>
+                                        </div>
+                                        <button onclick="withdrawRequest('<%= request.request_id %>')" 
+                                                class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                            Withdraw Request
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Mentorships -->
+        <% const completedMentorships = asMentee.filter(m => m.status === 'completed'); %>
+        <% if (completedMentorships.length > 0) { %>
+            <div class="mt-8 bg-white rounded-xl shadow-sm">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Completed Mentorships</h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <% completedMentorships.forEach(mentorship => { %>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <img src="<%= mentorship.mentor_avatar || '/images/default-avatar.jpg' %>" 
+                                         alt="<%= mentorship.mentor_name %>" 
+                                         class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <h4 class="font-medium text-gray-900"><%= mentorship.mentor_name %></h4>
+                                        <p class="text-sm text-gray-600"><%= mentorship.mentor_job_title %></p>
+                                        <div class="text-xs text-gray-500">
+                                            <%= new Date(mentorship.start_date).toLocaleDateString() %> - 
+                                            <%= new Date(mentorship.actual_end_date).toLocaleDateString() %>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <% if (mentorship.mentor_rating) { %>
+                                    <div class="mb-2">
+                                        <p class="text-xs text-gray-500 font-medium mb-1">Your Rating:</p>
+                                        <div class="flex items-center space-x-1">
+                                            <% for (let i = 1; i <= 5; i++) { %>
+                                                <svg class="w-4 h-4 <%= i <= mentorship.mentor_rating ? 'text-yellow-400' : 'text-gray-300' %>" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                </svg>
+                                            <% } %>
+                                            <span class="text-xs text-gray-600 ml-1">(<%= mentorship.mentor_rating %>/5)</span>
+                                        </div>
+                                    </div>
+                                <% } %>
+
+                                <button onclick="viewMentorshipDetails('<%= mentorship.mentorship_id %>')" 
+                                        class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                    View Details
+                                </button>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        async function withdrawRequest(requestId) {
+            if (!confirm('Are you sure you want to withdraw this mentorship request?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/mentorship/withdraw-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ request_id: requestId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Request withdrawn successfully', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    showNotification(result.message || 'Failed to withdraw request', 'error');
+                }
+            } catch (error) {
+                console.error('Error withdrawing request:', error);
+                showNotification('An error occurred. Please try again.', 'error');
+            }
+        }
+
+        function viewMentorshipDetails(mentorshipId) {
+            // TODO: Implement mentorship details view
+            showNotification('Mentorship details view coming soon!', 'info');
+        }
+
+        function scheduleMeeting(mentorshipId) {
+            // TODO: Implement meeting scheduling
+            showNotification('Meeting scheduling feature coming soon!', 'info');
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 translate-x-full`;
+            
+            const colors = {
+                success: 'bg-green-500 text-white',
+                error: 'bg-red-500 text-white',
+                warning: 'bg-yellow-500 text-black',
+                info: 'bg-blue-500 text-white'
+            };
+            
+            notification.className += ` ${colors[type] || colors.info}`;
+            notification.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-lg font-bold opacity-70 hover:opacity-100">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.classList.add('translate-x-full');
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+</body>
+</html>
