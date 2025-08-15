@@ -25,14 +25,29 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Expertise Areas</label>
-                    <div class="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3">
-                        <% expertiseAreas.forEach(area => { %>
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" name="expertise_areas" value="<%= area.area_name %>" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                                <span class="text-sm text-gray-700"><%= area.area_name %></span>
-                            </label>
-                        <% }); %>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto border border-gray-200 rounded-lg p-3 bg-white">
+                        <% if (typeof expertiseAreas !== 'undefined' && expertiseAreas && expertiseAreas.length > 0) { %>
+                            <% console.log('Expertise areas in template:', expertiseAreas.length); %>
+                            <% expertiseAreas.forEach((area, index) => { %>
+                                <div class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded">
+                                    <input type="checkbox" 
+                                           id="expertise_<%= area.area_name.replace(/\s+/g, '_') %>"
+                                           name="expertise_areas" 
+                                           value="<%= area.area_name %>" 
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+                                    <label for="expertise_<%= area.area_name.replace(/\s+/g, '_') %>" 
+                                           class="text-sm text-gray-700 cursor-pointer">
+                                        <%= area.area_name %>
+                                    </label>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="col-span-2 text-center text-gray-500 py-4">
+                                No expertise areas available (Debug: expertiseAreas = <%= typeof expertiseAreas %>, length = <%= expertiseAreas ? expertiseAreas.length : 'undefined' %>, data = <%= JSON.stringify(expertiseAreas) %>)
+                            </div>
+                        <% } %>
                     </div>
+                    <p class="text-xs text-gray-500 mt-1">Select all areas where you have expertise</p>
                 </div>
 
                 <div>
@@ -210,6 +225,46 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Pending Requests Modal for Mentors -->
+<div id="pendingRequestsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">Pending Mentorship Requests</h2>
+                <button onclick="closePendingRequestsModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="pendingRequestsList" class="space-y-4">
+                <!-- Requests will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- My Requests Modal for Mentees -->
+<div id="myRequestsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">My Mentorship Requests</h2>
+                <button onclick="closeMyRequestsModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="myRequestsList" class="space-y-4">
+                <!-- Requests will be loaded here -->
+            </div>
         </div>
     </div>
 </div>
